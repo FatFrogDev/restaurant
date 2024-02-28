@@ -11,10 +11,10 @@ public class ProductController {
     ProductServiceImpl productService;
 
     @GetMapping("/{uuid}")
-    public String readProductByUUID() { return productService.readProductByUUID(); }
+    public String findByUUID() { return productService.findByUUID(); }
 
-    @PostMapping("/j/{uuid}")
-    public String createProduct(@PathVariable String uuid) { return productService.createProduct(uuid); }
+    @PostMapping("/create/{uuid}")
+    public String save(@PathVariable String uuid) { return productService.saveProduct(uuid); }
 
 
 }

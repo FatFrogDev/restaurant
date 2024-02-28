@@ -11,12 +11,12 @@ public class ProductServiceImpl implements IProductService {
     ProductRepository productRepository;
 
     @Override
-    public String createProduct(String uuid) {
+    public String save(String uuid) {
         return productRepository.createProduct(uuid);
     }
 
     @Override
-    public String readProductByUUID() {
+    public String findByUUID() {
         return "Productos: ";
     }
 }
