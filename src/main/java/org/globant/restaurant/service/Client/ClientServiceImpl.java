@@ -1,11 +1,11 @@
-package org.globant.restaurant.service;
+package org.globant.restaurant.service.Client;
 
 import org.globant.restaurant.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ClientServiceImpl implements IClientService{
+public class ClientServiceImpl implements IClientService {
 
     @Autowired
     ClientRepository clientRepository;

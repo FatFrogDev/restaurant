@@ -1,4 +1,4 @@
-package org.globant.restaurant.service;
+package org.globant.restaurant.service.Client;
 
 public interface IClientService {
 

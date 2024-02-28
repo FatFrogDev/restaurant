@@ -1,6 +1,6 @@
 package org.globant.restaurant.controller;
 
-import org.globant.restaurant.service.ProductServiceImpl;
+import org.globant.restaurant.service.Product.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

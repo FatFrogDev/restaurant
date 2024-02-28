@@ -1,6 +1,6 @@
 package org.globant.restaurant.controller;
 
-import org.globant.restaurant.service.ClientServiceImpl;
+import org.globant.restaurant.service.Client.ClientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
