@@ -1,4 +1,4 @@
-package org.globant.restaurant.service;
+package org.globant.restaurant.service.Restaurant;
 
 public interface IRestaurantService {
     public String findClientByDocument();

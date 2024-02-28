@@ -1,4 +1,4 @@
-package org.globant.restaurant.service;
+package org.globant.restaurant.service.Product;
 
 public interface IProductService {
     public String createProduct(String uuid);
