@@ -3,7 +3,9 @@ package org.globant.restaurant.service;
 import org.globant.restaurant.controller.ProductController;
 import org.globant.restaurant.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProductServiceImpl implements IProductService{
     @Autowired
     ProductRepository productRepository;
@@ -14,7 +16,7 @@ public class ProductServiceImpl implements IProductService{
     }
 
     @Override
-    public String readProductByUUID(String uuid) {
-        return productRepository.readProductByUUID(uuid);
+    public String readProductByUUID() {
+        return "Productos: ";
     }
 }
