@@ -25,7 +25,7 @@ public class ClientController {
     }
 
     @PostMapping("/create/{uuid}")
-    public String createClient(@PathVariable String uuid){return clientService.createClient(uuid);}
+        public String createClient(@PathVariable String uuid){return clientService.createClient(uuid);}
 
     @PutMapping("/update/{document}")
     public String updateClient(@PathVariable String document){

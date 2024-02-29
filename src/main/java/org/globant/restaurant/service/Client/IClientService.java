@@ -9,4 +9,6 @@ public interface IClientService {
     String deleteClientByDocument(String document);
 
     ClientEntity findClientByDocument(String document);
+
+    String createClient(String UUID);
 }

@@ -11,6 +11,7 @@ import java.util.UUID;
 public class ClientRepository implements IClientRepository {
 
     private List<ClientEntity> clients;
+
     @PostConstruct
     public void init() {
         clients = List.of(
@@ -31,8 +32,10 @@ public class ClientRepository implements IClientRepository {
                         .deliveryAddress("Calle 45 # 67-89")
                         .build()
         );
-        clients.forEach(System.out::println);
     }
+
+    @Override
+    public String createClient(String uuid){return "Client" + uuid + "created successfully!";}
 
 
     public String updateClientByDocument(String document){
