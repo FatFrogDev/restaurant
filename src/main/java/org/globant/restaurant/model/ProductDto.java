@@ -1,8 +1,9 @@
 package org.globant.restaurant.model;
 
-import java.time.LocalDate;
+import java.util.UUID;
 
 public class ProductDto {
+    private UUID uuid;
     private String fantasyName;
     private String category;
     private String description;

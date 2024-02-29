@@ -1,4 +1,4 @@
-package org.globant.restaurant.converter;
+package org.globant.restaurant.mapper;
 
 import lombok.extern.log4j.Log4j2;
 import org.globant.restaurant.entity.ClientEntity;

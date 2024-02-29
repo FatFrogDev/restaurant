@@ -1,5 +1,6 @@
 package org.globant.restaurant.controller;
 
+import org.globant.restaurant.service.Product.IProductService;
 import org.globant.restaurant.service.Product.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -7,8 +8,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-    @Autowired
-    ProductServiceImpl productService;
+
+    IProductService productService;
+
+    public ProductController(ProductServiceImpl productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("/{uuid}")
     public String findByUUID() { return productService.findByUUID(); }

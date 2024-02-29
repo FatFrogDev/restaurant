@@ -1,18 +1,20 @@
 package org.globant.restaurant.service.Product;
 
-import org.globant.restaurant.repository.ProductRepository;
-import org.globant.restaurant.service.Product.IProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.globant.restaurant.repository.Product.ProductRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ProductServiceImpl implements IProductService {
-    @Autowired
+
     ProductRepository productRepository;
+
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
 
     @Override
     public String save(String uuid) {
-        return productRepository.createProduct(uuid);
+        return productRepository.saveProduct(uuid);
     }
 
     @Override
