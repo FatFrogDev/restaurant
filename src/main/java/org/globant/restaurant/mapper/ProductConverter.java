@@ -3,19 +3,19 @@ package org.globant.restaurant.mapper;
 import lombok.extern.log4j.Log4j2;
 import org.globant.restaurant.entity.ProductEntity;
 import org.globant.restaurant.helpers.HelperMapper;
-import org.globant.restaurant.model.ProductDto;
+import org.globant.restaurant.model.ProductDTO;
 import org.springframework.stereotype.Component;
 
 @Component
 @Log4j2
 public class ProductConverter {
-    public ProductDto convertProductEntityToProductDTO(ProductEntity productEntity) {
-        ProductDto productDto = new ProductDto();
+    public ProductDTO convertProductEntityToProductDTO(ProductEntity productEntity) {
+        ProductDTO productDTO = new ProductDTO();
         try {
-            productDto= HelperMapper.modelMapper().map(productEntity, ProductDto.class);
+            productDTO= HelperMapper.modelMapper().map(productEntity, ProductDTO.class);
         } catch (Exception e) {
             log.error("Error");
         }
-        return productDto;
+        return productDTO;
     }
 }
