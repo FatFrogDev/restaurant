@@ -7,8 +7,6 @@ import org.globant.restaurant.service.Client.IClientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
-
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
@@ -26,8 +24,8 @@ public class ClientController {
         return clientService.findClientByDocument(document);
     }
 
-    @PostMapping("/create/{uuid}")
-        public ResponseEntity<?> createClient(ClientDto clientDto){
+    @PostMapping("")
+        public ResponseEntity<?> createClient(@RequestBody ClientDto clientDto){
         return clientService.save(clientDto);
     }
 
@@ -40,7 +38,7 @@ public class ClientController {
     }
     @DeleteMapping("/{document}")
     public void deleteClient(@PathVariable String document){
-         clientService.deleteClientByDocument(document);
+         clientService.deleteByDocument(document);
     }
 
 }

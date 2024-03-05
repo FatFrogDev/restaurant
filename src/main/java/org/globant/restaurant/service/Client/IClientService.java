@@ -9,7 +9,7 @@ public interface IClientService {
 
     ResponseEntity<?> updateByDocument(ClientDto clientDto);
 
-    ResponseEntity<?> deleteClientByDocument(String document);
+    ResponseEntity<?> deleteByDocument(String document);
 
-    ResponseEntity findClientByDocument(String document);
+    ResponseEntity<?> findClientByDocument(String document);
 }

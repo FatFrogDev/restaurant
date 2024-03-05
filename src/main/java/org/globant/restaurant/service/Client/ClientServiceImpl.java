@@ -18,21 +18,21 @@ public class ClientServiceImpl implements IClientService {
 
     ClientConverter converter;
 
-
     public ClientServiceImpl(ClientRepository clientRepository, ClientConverter converter) {
         this.clientRepository = clientRepository;
         this.converter = converter;
     }
 
-
     @Override
-    public ResponseEntity<?> save(ClientDto client) {
+    public ResponseEntity<?> save(ClientDto clientDto) {
+        ClientEntity clientEntity = converter.convertClientDTOToClientEntity(clientDto);
+        System.out.println(clientEntity.toString());
         try {
-            clientRepository.save(converter.convertClientDTOToClientEntity(client));
+            clientRepository.save(clientEntity);
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(clientRepository.findByDocument(client.getDocument()));
+                    .body(clientEntity);
         } catch (Exception e){
-            return ResponseEntity.status(500).body("Internal server error: " + e);
+            return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
         }
     }
 
@@ -50,7 +50,7 @@ public class ClientServiceImpl implements IClientService {
     }
 
     @Override
-    public ResponseEntity<?> deleteClientByDocument(String document) {
+    public ResponseEntity<?> deleteByDocument(String document) {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
         if (optionalClient.isPresent()) {
             clientRepository.deleteByDocument(document);
@@ -63,7 +63,7 @@ public class ClientServiceImpl implements IClientService {
     public ResponseEntity<?> findClientByDocument(String document) {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
         if (optionalClient.isPresent()) {
-            return ResponseEntity.ok().body(clientRepository.findByDocument(document));
+            return ResponseEntity.ok().body(optionalClient.get());
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Client not found");
     }
