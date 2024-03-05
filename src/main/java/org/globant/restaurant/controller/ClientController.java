@@ -4,7 +4,10 @@ import org.globant.restaurant.mapper.ClientConverter;
 import org.globant.restaurant.model.ClientDto;
 import org.globant.restaurant.service.Client.ClientServiceImpl;
 import org.globant.restaurant.service.Client.IClientService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/clients")
@@ -19,22 +22,25 @@ public class ClientController {
     }
 
     @GetMapping("/{document}")
-    public ClientDto findClientByDocument(@PathVariable String document){
-        return converter.convertClientEntityToClientDTO(
-                clientService.findClientByDocument(document));
+    public ResponseEntity<?> findClientByDocument(@PathVariable String document){
+        return clientService.findClientByDocument(document);
     }
 
     @PostMapping("/create/{uuid}")
-        public String createClient(@PathVariable String uuid){return clientService.createClient(uuid);}
-
-    @PutMapping("/update/{document}")
-    public String updateClient(@PathVariable String document){
-        return clientService.updateClientByDocument(document);
+        public ResponseEntity<?> createClient(ClientDto clientDto){
+        return clientService.save(clientDto);
     }
 
+    @PutMapping("/{document}")
+    public ResponseEntity<?> updateClient(@PathVariable String document, @RequestBody ClientDto clientdto){
+        clientService.updateByDocument(clientdto);
+        return ResponseEntity
+                .ok()
+                .body(clientService.findClientByDocument(document));
+    }
     @DeleteMapping("/{document}")
-    public String deleteClient(@PathVariable String document){
-        return clientService.deleteClientByDocument(document);
+    public void deleteClient(@PathVariable String document){
+         clientService.deleteClientByDocument(document);
     }
 
 }

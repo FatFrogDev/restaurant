@@ -1,14 +1,15 @@
 package org.globant.restaurant.service.Client;
 
-import org.globant.restaurant.entity.ClientEntity;
+import org.globant.restaurant.model.ClientDto;
+import org.springframework.http.ResponseEntity;
 
 public interface IClientService {
 
-    String updateClientByDocument(String document);
+    ResponseEntity<?> save(ClientDto client);
 
-    String deleteClientByDocument(String document);
+    ResponseEntity<?> updateByDocument(ClientDto clientDto);
 
-    ClientEntity findClientByDocument(String document);
+    ResponseEntity<?> deleteClientByDocument(String document);
 
-    String createClient(String UUID);
+    ResponseEntity findClientByDocument(String document);
 }

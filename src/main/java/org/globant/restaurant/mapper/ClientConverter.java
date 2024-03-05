@@ -18,4 +18,14 @@ public class ClientConverter {
         }
         return clientDto;
     }
+
+    public ClientEntity convertClientDTOToClientEntity(ClientDto clientDto) {
+        ClientEntity clientEntity = new ClientEntity();
+        try {
+            clientEntity = HelperMapper.modelMapper().map(clientDto, ClientEntity.class);
+        } catch (Exception e) {
+            log.error("Error");
+        }
+        return clientEntity;
+    }
 }
