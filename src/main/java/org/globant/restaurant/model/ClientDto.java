@@ -11,7 +11,7 @@ import java.util.UUID;
 public class ClientDto {
     protected UUID uuid;
     private String document;
-    private String name;
+    private String fullName;
     private String email;
     private String phone;
     private String deliveryAddress;

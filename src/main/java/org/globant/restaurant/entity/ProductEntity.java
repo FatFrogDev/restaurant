@@ -1,5 +1,8 @@
 package org.globant.restaurant.entity;
 
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,22 +14,43 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name="products")
 public class ProductEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private UUID uuid;
-    private String name;
-    private Category category;
-    private String description;
-    private String price;
-    private Boolean available;
-}
 
-enum Category {
-    HAMBURGERS_AND_HOTDOGS,
-    CHICKEN,
-    FISH,
-    MEATS,
-    DESSERTS,
-    VEGAN_FOOD,
-    KIDS_MEALS
+    @NotEmpty
+    @Column(nullable = false)
+    private UUID uuid;
+
+    @NotNull
+    @Column(nullable = false)
+    private String fantasyName;
+
+    @NotNull
+    @Column(nullable = false)
+    private Category category;
+
+    @Column(columnDefinition = "TEXT(511) NOT NULL", nullable = false)
+    private String description;
+
+    @NotEmpty
+    @Column(nullable = false)
+    private Double price;
+
+    @NotNull
+    @Column(nullable = false)
+    private boolean available;
+
+    enum Category {
+        HAMBURGERS_AND_HOTDOGS,
+        CHICKEN,
+        FISH,
+        MEATS,
+        DESSERTS,
+        VEGAN_FOOD,
+        KIDS_MEALS
+    }
 }
