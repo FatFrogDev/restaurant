@@ -1,6 +1,7 @@
 package org.globant.restaurant.service.Client;
 
 import org.globant.restaurant.entity.ClientEntity;
+import org.globant.restaurant.model.ClientDto;
 
 public interface IClientService {
 
@@ -10,5 +11,5 @@ public interface IClientService {
 
     ClientEntity findClientByDocument(String document);
 
-    String createClient(String UUID);
+    String createClient(ClientDto clientDto);
 }
