@@ -18,7 +18,7 @@ public class ClientRepository implements IClientRepository {
                 ClientEntity.builder()
                         .uuid(UUID.randomUUID())
                         .document("CC-101287166")
-                        .name("Andres Fernandez")
+                        .name("Andrea Fernandez")
                         .email("andresf2@gmail.com")
                         .phone("3112034591")
                         .deliveryAddress("Calle 123 # 45-67")
