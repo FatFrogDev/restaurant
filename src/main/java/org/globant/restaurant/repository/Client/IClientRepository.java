@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ClientRepository extends JpaRepository<ClientEntity, UUID> {
+public interface IClientRepository extends JpaRepository<ClientEntity, UUID> {
     Optional<ClientEntity> findByDocument(String document);
 
     @Transactional

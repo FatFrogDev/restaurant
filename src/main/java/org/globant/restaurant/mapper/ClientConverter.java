@@ -12,24 +12,17 @@ public class ClientConverter {
     public ClientDto convertClientEntityToClientDTO(ClientEntity clientEntity) {
         ClientDto clientDto = new ClientDto();
         try {
-            clientDto= HelperMapper.modelMapper().map(clientEntity, ClientDto.class);
+            clientDto = HelperMapper.modelMapper().map(clientEntity, ClientDto.class);
         } catch (Exception e) {
             log.error("Error");
         }
         return clientDto;
     }
 
-<<<<<<< HEAD
-    public ClientEntity convertClientDTOToClientEntity(ClientDto clientDto) {
-        ClientEntity clientEntity = new ClientEntity();
-        try {
-            clientEntity = HelperMapper.modelMapper().map(clientDto, ClientEntity.class);
-=======
     public ClientEntity convertClientDtoToClientEntity(ClientDto clientDto) {
         ClientEntity clientEntity = new ClientEntity();
         try {
             clientEntity= HelperMapper.modelMapper().map(clientDto, ClientEntity.class);
->>>>>>> main
         } catch (Exception e) {
             log.error("Error");
         }

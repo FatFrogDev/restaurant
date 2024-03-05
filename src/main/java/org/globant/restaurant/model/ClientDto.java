@@ -9,7 +9,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ClientDto {
-    protected UUID uuid;
     private String document;
     private String fullName;
     private String email;
