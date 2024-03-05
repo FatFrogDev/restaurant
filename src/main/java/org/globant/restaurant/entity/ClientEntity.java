@@ -1,9 +1,12 @@
 package org.globant.restaurant.entity;
 
 import jakarta.persistence.*;
+<<<<<<< HEAD
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+=======
+>>>>>>> main
 import lombok.*;
 
 import java.util.Objects;
@@ -14,6 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+<<<<<<< HEAD
 @Entity
 @Table(name="clients")
 public class ClientEntity {
@@ -43,6 +47,26 @@ public class ClientEntity {
 
     @Size(max = 500)
     @Column(nullable = false)
+=======
+@Data
+
+@Entity
+@Table(name = "client")
+public class ClientEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "uuid")
+    private UUID uuid;
+    @Column(name = "document")
+    private String document;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "email")
+    private String email;
+    @Column(name = "phone")
+    private String phone;
+    @Column(name = "delivery_address")
+>>>>>>> main
     private String deliveryAddress;
 
     @Override
