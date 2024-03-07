@@ -1,6 +1,7 @@
 package org.globant.restaurant.model;
 
 import java.util.UUID;
+
 public class ProductDTO {
     private UUID uuid;
     private String fantasyName;

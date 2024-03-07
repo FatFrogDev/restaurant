@@ -3,10 +3,8 @@ package org.globant.restaurant.mapper;
 import lombok.extern.log4j.Log4j2;
 import org.globant.restaurant.entity.OrderEntity;
 import org.globant.restaurant.helpers.HelperMapper;
-import org.globant.restaurant.model.ClientDto;
 import org.globant.restaurant.model.OrderSaveDTO;
 import org.globant.restaurant.model.OrderViewDTO;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,4 +20,14 @@ public class OrderConverter {
         }
         return orderViewDTO;
     }
+    public OrderSaveDTO convertOrderSaveDTOToOrderEntity(OrderEntity orderEntity) {
+        OrderSaveDTO orderSaveDTO = new OrderSaveDTO();
+        try {
+            orderSaveDTO = HelperMapper.modelMapper().map(orderEntity, OrderSaveDTO.class);
+        } catch (Exception e) {
+            log.error("Error");
+        }
+        return orderSaveDTO;
+    }
+
 }

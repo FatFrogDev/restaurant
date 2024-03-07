@@ -22,7 +22,8 @@ public class ProductController {
     public String findByUUID() { return productService.findByUUID(); }
 
     @PostMapping("/create/{uuid}")
-    public String save(@PathVariable String uuid) { return productService.save(uuid); }
+    public String save(@PathVariable String uuid) {
+        return productService.save(uuid); }
 
 
     @GetMapping("/{idProduct}")
