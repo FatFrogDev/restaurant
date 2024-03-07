@@ -3,8 +3,10 @@ package org.globant.restaurant.controller;
 import org.globant.restaurant.model.ProductDTO;
 import org.globant.restaurant.service.Product.IProductService;
 import org.globant.restaurant.service.Product.ProductServiceImpl;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.List;
 
@@ -18,11 +20,17 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @GetMapping("/{uuid}")
-    public String findByUUID() { return productService.findByUUID(); }
+    // Create a new product
+    @PostMapping("")
+    public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO) {
+        return productService.save(productDTO);
+    }
 
-    @PostMapping("/create/{uuid}")
-    public String save(@PathVariable String uuid) { return productService.save(uuid); }
+    // Consult products by ID
+    @GetMapping("/{uuid}")
+    public Optional<?> findByUUID(@PathVariable ProductDTO productDTO) {
+        return productService.findByUUID(productDTO);
+    }
 
 
     @GetMapping("/{idProduct}")
