@@ -8,6 +8,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class ClientDto {
     private String document;
     private String fullName;

@@ -2,19 +2,15 @@ package org.globant.restaurant.service.Client;
 
 
 import org.globant.restaurant.model.ClientDto;
-import org.springframework.http.ResponseEntity;
-
-import org.globant.restaurant.entity.ClientEntity;
-import org.globant.restaurant.model.ClientDto;
 
 
 public interface IClientService {
 
-    ResponseEntity<?> save(ClientDto client);
+    ClientDto save(ClientDto client);
 
-    ResponseEntity<?> updateByDocument(ClientDto clientDto);
+    void updateByDocument(ClientDto clientDto);
 
-    ResponseEntity<?> deleteByDocument(String document);
+    void deleteByDocument(String document);
 
-    ResponseEntity<?> findClientByDocument(String document);
+    ClientDto findClientByDocument(String document);
 }
