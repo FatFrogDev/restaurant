@@ -21,7 +21,6 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
     @Column(nullable = false)
     private UUID uuid;
 
@@ -36,7 +35,6 @@ public class ProductEntity {
     @Column(columnDefinition = "TEXT(511) NOT NULL", nullable = false)
     private String description;
 
-    @NotEmpty
     @Column(nullable = false)
     private Double price;
 

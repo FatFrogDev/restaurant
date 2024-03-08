@@ -2,13 +2,15 @@ package org.globant.restaurant.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 
+import javax.swing.event.DocumentEvent;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-
+@ToString
 @Getter
 @Setter
 @AllArgsConstructor
@@ -27,32 +29,16 @@ public class OrderEntity {
     @ManyToOne
     private ClientEntity clientDocument;
     @OneToMany
-    private List<ProductEntity> productUuid;
+    private ProductEntity productUuid;
     private int quantity; // TODO: add validation, number must be greater or equals to 1 and lower than 100
     private String extraInformation;
     private double subTotal;
     private double tax;
     private double granTotal;
     private boolean delivered;
-    private LocalDate deliveryDate;
+    private LocalDateTime deliveryDate;
 
-    @Override
-    public String toString() {
-        return "OrderEntity{" +
-                "id=" + id +
-                ", uuid=" + uuid +
-                ", creationDateTime=" + creationDateTime +
-                ", clientDocument=" + clientDocument +
-                ", productUuid=" + productUuid +
-                ", quantity=" + quantity +
-                ", extraInformation='" + extraInformation + '\'' +
-                ", subTotal=" + subTotal +
-                ", tax=" + tax +
-                ", granTotal=" + granTotal +
-                ", delivered=" + delivered +
-                ", deliveryDate=" + deliveryDate +
-                '}';
-    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -65,4 +51,5 @@ public class OrderEntity {
     public int hashCode() {
         return Objects.hash(id, uuid, creationDateTime, clientDocument, productUuid, quantity, extraInformation, subTotal, tax, granTotal, delivered, deliveryDate);
     }
+
 }

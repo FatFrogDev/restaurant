@@ -11,23 +11,37 @@ import org.springframework.stereotype.Component;
 @Log4j2
 public class OrderConverter {
 
-    public OrderViewDTO convertOrderEntityToOrderViewDTO(OrderEntity orderEntity) {
-        OrderViewDTO orderViewDTO = new OrderViewDTO();
-        try {
-            orderViewDTO = HelperMapper.modelMapper().map(orderEntity, OrderViewDTO.class);
-        } catch (Exception e) {
-            log.error("Error");
-        }
-        return orderViewDTO;
+    public OrderViewDTO EntityToDto(OrderEntity orderEntity) {
+      OrderViewDTO orderDto = new OrderViewDTO();
+      orderDto.setClientDocument(orderEntity.getClientDocument());
+      orderDto.setProductUUID(orderEntity.getProductUuid());
+      orderDto.setQuantity(orderEntity.getQuantity());
+      orderDto.setExtraInformation(orderEntity.getExtraInformation());
+      orderDto.setDelivered(orderEntity.isDelivered());
+      orderDto.setSubTotal(orderEntity.getSubTotal());
+      orderDto.setTax(orderEntity.getTax());
+      orderDto.setGrandTotal(orderEntity.getGranTotal());
+      orderDto.setCreationDateTime(orderEntity.getCreationDateTime());
+      orderDto.setDeliveryDate(orderEntity.getDeliveryDate());
+
+        return orderDto;
     }
-    public OrderSaveDTO convertOrderSaveDTOToOrderEntity(OrderEntity orderEntity) {
-        OrderSaveDTO orderSaveDTO = new OrderSaveDTO();
-        try {
-            orderSaveDTO = HelperMapper.modelMapper().map(orderEntity, OrderSaveDTO.class);
-        } catch (Exception e) {
-            log.error("Error");
-        }
-        return orderSaveDTO;
+
+    public OrderEntity DtoToEntity(OrderViewDTO orderViewDTO) {
+        return OrderEntity.builder()
+                .clientDocument(orderViewDTO.getClientDocument())
+                .productUuid(orderViewDTO.getProductUUID())
+                .quantity(orderViewDTO.getQuantity())
+                .extraInformation(orderViewDTO.getExtraInformation())
+                .subTotal(orderViewDTO.getSubTotal())
+                .tax(orderViewDTO.getTax())
+                .granTotal(orderViewDTO.getGrandTotal())
+                .creationDateTime(orderViewDTO.getCreationDateTime())
+                .deliveryDate(orderViewDTO.getDeliveryDate())
+                .delivered(orderViewDTO.isDelivered())
+                .build();
+
     }
+
 
 }
