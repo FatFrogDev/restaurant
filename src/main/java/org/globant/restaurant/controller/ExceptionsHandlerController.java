@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- *  Handles all exceptions thrown by the controllers.
+ * Handles all exceptions thrown by the controllers.
  */
 @Component
 @RestControllerAdvice
@@ -100,5 +100,16 @@ public class ExceptionsHandlerController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
-
+    /**
+     * Exceptions Handler for InvalidQueryArgsException exception.
+     * This exception is thrown when the query arguments given are not valid. <br>
+     * The stats code returned will be BAD_REQUEST (400).
+     * @param e Exception thrown
+     * @return ResponseEntity object with a ErrorDTO which contains the error message.
+     */
+    @ExceptionHandler({InvalidQueryArgsException.class})
+    public ResponseEntity<ErrorDTO> handleInvalidQueryArgs(InvalidQueryArgsException e) {
+        ErrorDTO error = new ErrorDTO(HttpStatus.BAD_REQUEST, date,"validation error: " + e.getMessage(), InvalidQueryArgsException.class.getSimpleName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 }
