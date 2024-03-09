@@ -33,17 +33,16 @@ public class ProductController { //TODO: Add bonus track implementation (search 
     }
 
 
-    @GetMapping("/{idProduct}")
-    public ProductDTO getProduct(@PathVariable("idProduct") UUID idProduct){
-        return productService.getProductService(idProduct);
+    @PutMapping("/{uuid}")
+    public ResponseEntity<Void> updateProduct(@PathVariable UUID uuid, @RequestBody ProductDTO productDTO) {
+        productService.updateByUuid(uuid, productDTO);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-    @GetMapping(value = "/all")
-    public List<ProductDTO> getAllProduct(){
-        return productService.getAllProductService();
-    }
-    @PutMapping(value = "/{idProduct}")
-    public ProductDTO updateProduct(@PathVariable("idProduct") UUID idProduct, @RequestBody ProductDTO productDTO) throws Exception{
-        return productService.updateProduct(idProduct, productDTO);
+
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable UUID uuid) {
+        productService.deleteByUuid(uuid);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
