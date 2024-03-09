@@ -2,7 +2,6 @@ package org.globant.restaurant;
 
 
 import org.globant.restaurant.repository.Client.IClientRepository;
-import org.globant.restaurant.repository.Product.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

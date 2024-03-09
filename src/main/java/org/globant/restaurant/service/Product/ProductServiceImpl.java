@@ -1,76 +1,107 @@
 package org.globant.restaurant.service.Product;
 
 import org.globant.restaurant.entity.ProductEntity;
+import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
+import org.globant.restaurant.exceptions.EntityNotFoundException;
 import org.globant.restaurant.mapper.ProductConverter;
 import org.globant.restaurant.model.ProductDTO;
-import org.globant.restaurant.repository.Product.ProductRepository;
+import org.globant.restaurant.repository.Product.IProductRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class ProductServiceImpl implements IProductService {
 
-    ProductRepository productRepository;
+    IProductRepository productRepository;
     ProductConverter productConverter;
 
-    public ProductServiceImpl(ProductRepository productRepository, ProductConverter productConverter) {
+    public ProductServiceImpl(IProductRepository productRepository, ProductConverter productConverter) {
         this.productRepository = productRepository;
         this.productConverter = productConverter;
     }
 
     @Override
-    public ResponseEntity<?> save(ProductDTO productDTO) {
-        // productDTO.setCategory(productDTO.getCategory().toUpperCase());
-        ProductEntity productEntity = productConverter.covertProductDtoToProductEntity(productDTO);
+    public ProductDTO save(ProductDTO productDTO) {
+        Optional<ProductEntity> existingProduct = productRepository.findByFantasyName(productDTO.getFantasyName().toUpperCase());
 
-        productEntity.setUuid(UUID.randomUUID());
-        System.out.println(productEntity.toString());
-        try {
-            productRepository.save(productEntity);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(productEntity);
-        } catch (Exception e){
-            return ResponseEntity.status(500).body("Internal server error: " + e.getMessage());
+        if (existingProduct.isPresent()) {
+            throw new EntityAlreadyExistsException("Product with fantasy name already exists");
         }
+
+        ProductEntity productEntity = productConverter.convertProductDtoToProductEntity(productDTO);
+        UUID uuid = UUID.randomUUID();
+        productEntity.setUuid(uuid);
+        productEntity.setFantasyName(productEntity.getFantasyName().toUpperCase());
+
+        ProductEntity savedProduct = productRepository.save(productEntity);
+
+        return productConverter.convertProductEntityToProductDTO(savedProduct);
     }
 
     @Override
-    public Optional<?> findByUUID(ProductDTO productDTO) {
-/**/
-        return null;
+    public ProductDTO findByUuid(UUID uuid) {
+        Optional<ProductEntity> productOptional = productRepository.findByUuid(uuid);
+
+        return productOptional.map(productConverter::convertProductEntityToProductDTO)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
     }
 
     @Override
-    public ProductDTO getProductService(UUID idProduct) {
-        return null;
-        //return productRepository.getProductRepository(idProduct);
-    }
+    public void updateByUuid(UUID uuid, ProductDTO productDTO) {
+        Optional<ProductEntity> existingProductOptional = productRepository.findByUuid(uuid);
 
-    @Override
-    public List<ProductDTO> getAllProductService() {
-        return null;
-        //return productRepository.getAllProductService();
-    }
+        ProductEntity existingProduct = existingProductOptional.orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
-    @Override
-    public ProductDTO updateProduct(UUID idProduct, ProductDTO productDTO) throws Exception{
-        return null;
-        /*ProductDTO productFound = getProductService(idProduct);
-        if(productFound == null){
-            throw new Exception("Product doesn't exist");
+        boolean hasChanges = false;
+
+        if (productDTO.getFantasyName() != null && !productDTO.getFantasyName().equalsIgnoreCase(existingProduct.getFantasyName())) {
+            existingProduct.setFantasyName(productDTO.getFantasyName().toUpperCase());
+            hasChanges = true;
         }
-        productFound.setFantasyName(productDTO.getFantasyName());
-        productFound.setDescription(productDTO.getDescription());
-        productFound.setPrice(productDTO.getPrice());
-        productFound.setCategory(productDTO.getCategory());
-        productFound.setAvailable(productDTO.getAvailable());
 
-        return productRepository.update(productFound);*/
+        if (productDTO.getCategory() != null && !productDTO.getCategory().equals(existingProduct.getCategory().name())) {
+            existingProduct.setCategory(ProductEntity.Category.valueOf(productDTO.getCategory()));
+            hasChanges = true;
+        }
+
+        if (productDTO.getDescription() != null && !productDTO.getDescription().equals(existingProduct.getDescription())) {
+            existingProduct.setDescription(productDTO.getDescription());
+            hasChanges = true;
+        }
+
+        if (productDTO.getPrice() != null && !productDTO.getPrice().equals(String.valueOf(existingProduct.getPrice()))) {
+            existingProduct.setPrice(Double.parseDouble(productDTO.getPrice()));
+            hasChanges = true;
+        }
+
+        if (productDTO.getAvailable() != null && productDTO.getAvailable() != existingProduct.isAvailable()) {
+            existingProduct.setAvailable(productDTO.getAvailable());
+            hasChanges = true;
+        }
+
+        if (!hasChanges) {
+            throw new EntityNotFoundException("No changes detected in the request");
+        }
+
+        productRepository.save(existingProduct);
+    }
+
+    @Override
+    public void deleteByUuid(UUID uuid) {
+        Optional<ProductEntity> productOptional = productRepository.findByUuid(uuid);
+
+        productOptional.ifPresentOrElse(
+                product -> productRepository.deleteByUuid(uuid),
+                () -> {
+                    throw new EntityNotFoundException("Product not found");
+                }
+        );
     }
 }
