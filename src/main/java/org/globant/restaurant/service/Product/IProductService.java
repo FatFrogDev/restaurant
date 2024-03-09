@@ -9,13 +9,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IProductService {
-     ResponseEntity<?> save(ProductDTO productDTO);
+     ProductDTO save(ProductDTO productDTO);
 
-     Optional<?> findByUUID(ProductDTO productDTO);
+     ProductDTO findByUuid(UUID uuid);
 
-     ProductDTO getProductService(UUID idProduct);
+     void updateByUuid(UUID uuid, ProductDTO productDTO);
 
-     List<ProductDTO> getAllProductService();
-
-     ProductDTO updateProduct(UUID idProduct, ProductDTO productDTO) throws Exception;
+     void deleteByUuid(UUID uuid);
 }
