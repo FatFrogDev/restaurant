@@ -29,7 +29,8 @@ public class ProductServiceImpl implements IProductService {
         // productDTO.setCategory(productDTO.getCategory().toUpperCase());
         ProductEntity productEntity = productConverter.covertProductDtoToProductEntity(productDTO);
 
-        productEntity.setUuid(UUID.randomUUID());
+        // productEntity.setUuid(UUID.randomUUID());
+        System.out.println(productEntity.getUuid());
         System.out.println(productEntity.toString());
         try {
             productRepository.save(productEntity);

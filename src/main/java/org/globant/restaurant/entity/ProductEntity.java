@@ -25,9 +25,13 @@ public class ProductEntity {
     @Column(nullable = false)
     private UUID uuid;
 
+    public void setUuid(UUID uuid) {
+        this.uuid = UUID.randomUUID();
+    }
+
     @NotNull
     @Column(nullable = false)
-    private String fantasyName;
+    private String fantasyname;
 
     @NotNull
     @Column(nullable = false)
@@ -58,7 +62,7 @@ public class ProductEntity {
         return "ProductEntity{" +
                 "id=" + id +
                 ", uuid=" + uuid +
-                ", fantasyName='" + fantasyName + '\'' +
+                ", fantasyName='" + fantasyname + '\'' +
                 ", category=" + category +
                 ", description='" + description + '\'' +
                 ", price=" + price +
