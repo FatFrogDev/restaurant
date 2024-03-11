@@ -11,11 +11,10 @@ import org.springframework.stereotype.Component;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * This class contains all the client validations that are used or required in the program.
  * <br>
- * Note that it could be also used a {@link jakarta.validation.Validation} annotation through the Dto's or Entities.
+ * Note that it could be also used a {@link Valid} annotation through the Dto's or Entities.
  */
 @Component
 public class ClientValidators {
@@ -133,8 +132,8 @@ public class ClientValidators {
      * @return True when the client document has a valid format.
      * @throws ClientInvalidDocumentFormatException when client document format is invalid.
      */
-    public boolean clientDocumentIsValid(String document){
-        Pattern documentPattern = Pattern.compile("^(CC|P|CE)-[0-9]{12}$");
+    public final boolean clientDocumentIsValid(String document){
+        Pattern documentPattern = Pattern.compile("^(CC|P|CE)-[0-9]{5,12}$");
         Matcher matcher = documentPattern.matcher(document);
         if (!document.isEmpty()
                 && (!(document.isBlank()) && (document.length()<=20))

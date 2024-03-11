@@ -44,4 +44,9 @@ public class ProductController { //TODO: Add bonus track implementation (search 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+
+    @GetMapping("/search")
+    public ResponseEntity<ProductDTO> findProductByFantasyName(@RequestParam("q")String productFantasyName) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.findProductByFantasyName(productFantasyName));
+    }
 }

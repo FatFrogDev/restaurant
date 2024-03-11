@@ -26,7 +26,7 @@ public class ProductEntity {
     private UUID uuid;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String fantasyName;
 
     @NotNull

@@ -1,17 +1,16 @@
 package org.globant.restaurant.service.Product;
 
+import org.globant.restaurant.controller.ProductController;
 import org.globant.restaurant.entity.ProductEntity;
 import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
 import org.globant.restaurant.exceptions.EntityNotFoundException;
+import org.globant.restaurant.exceptions.ProductInvalidFantasyName;
 import org.globant.restaurant.mapper.ProductConverter;
 import org.globant.restaurant.model.ProductDTO;
 import org.globant.restaurant.repository.Product.IProductRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.globant.restaurant.validators.ProductValidators;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,11 +18,15 @@ import java.util.UUID;
 public class ProductServiceImpl implements IProductService {
 
     IProductRepository productRepository;
+
     ProductConverter productConverter;
 
-    public ProductServiceImpl(IProductRepository productRepository, ProductConverter productConverter) {
+    ProductValidators validator;
+
+    public ProductServiceImpl(IProductRepository productRepository, ProductConverter productConverter, ProductValidators validator) {
         this.productRepository = productRepository;
         this.productConverter = productConverter;
+        this.validator = validator;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public void updateByUuid(UUID uuid, ProductDTO productDTO) {
+    public void updateByUuid(UUID uuid, ProductDTO productDTO) { // TODO: Refactor validations; set validations in a ProductValidators class
         Optional<ProductEntity> existingProductOptional = productRepository.findByUuid(uuid);
 
         ProductEntity existingProduct = existingProductOptional.orElseThrow(() -> new EntityNotFoundException("Product not found"));
@@ -102,5 +105,18 @@ public class ProductServiceImpl implements IProductService {
                     throw new EntityNotFoundException("Product not found");
                 }
         );
+    }
+
+    @Override
+    public ProductDTO findProductByFantasyName(String fantasyName) {
+        if (validator.productFantasyNameIsValid(fantasyName.toUpperCase())) {
+            Optional<ProductEntity> optionalProductEntity = productRepository.findByFantasyName(fantasyName);
+
+            if (optionalProductEntity.isPresent()) {
+                return productConverter.convertProductEntityToProductDTO(optionalProductEntity.get());
+            }
+            throw new EntityNotFoundException("Product with fantasy name : " + fantasyName + "  does not exists.");
+        }
+        throw new ProductInvalidFantasyName("Fantasy name format is invalid");
     }
 }
