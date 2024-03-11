@@ -2,6 +2,7 @@ package org.globant.restaurant.service.Client;
 
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
+import org.globant.restaurant.exceptions.EntityHasNoDifferentDataException;
 import org.globant.restaurant.exceptions.EntityNotFoundException;
 import org.globant.restaurant.exceptions.InvalidQueryArgsException;
 import org.globant.restaurant.mapper.ClientConverter;
@@ -34,10 +35,12 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> client = clientRepository.findByDocument(clientDto.getDocument());
         ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
         if (!client.isPresent()){
-            //TODO: validate client data doesnt have errors and then save.
-            clientRepository.save(clientEntity);
-            return clientDto;
-        } throw new EntityAlreadyExistsException("Client already exists");
+            if(validator.isSavableClient(clientDto)){
+                clientRepository.save(clientEntity);
+                return clientDto;
+            }; throw new EntityHasNoDifferentDataException("Client has no different data");
+        }
+        throw new EntityAlreadyExistsException("Client already exists");
     }
 
     @Override
@@ -46,11 +49,12 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(clientDto.getDocument());
 
         if (optionalClient.isPresent()) {
-            ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
-            clientEntity.setUuid(optionalClient.get().getUuid());
-            //TODO: validate client data doesnt have errors and then update.
-            clientRepository.save(clientEntity);
-        } else throw new EntityNotFoundException("Client does not exists");
+            if (validator.clientIsUpdatable(clientDto, optionalClient.get())){
+                ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
+                clientEntity.setUuid(optionalClient.get().getUuid());
+                clientRepository.save(clientEntity);
+            }
+        } throw new EntityNotFoundException("Client does not exists");
     }
 
     @Override
@@ -58,7 +62,7 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
         if (optionalClient.isPresent()) {
             clientRepository.deleteByDocument(document);
-        } else throw new EntityNotFoundException("Client to delete exists");
+        } throw new EntityNotFoundException("Client to delete exists");
     }
 
     @Override
@@ -66,7 +70,7 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
         if (optionalClient.isPresent()) {
             return converter.convertClientEntityToClientDTO(optionalClient.get());
-        }else throw new EntityNotFoundException("Client does not exists");
+        } throw new EntityNotFoundException("Client does not exists");
     }
 
     @Override
@@ -86,6 +90,6 @@ public class ClientServiceImpl implements IClientService {
                     .map(clientEntity -> converter.convertClientEntityToClientDTO(clientEntity))
                     .toList();
         }
-        else throw new InvalidQueryArgsException("Invalid arguments provided order must be 'asc' or 'desc' & field must be 'name', 'document' or 'address'");
+        throw new InvalidQueryArgsException("Invalid arguments provided order must be 'asc' or 'desc' & field must be 'name', 'document' or 'address'");
     }
 }
