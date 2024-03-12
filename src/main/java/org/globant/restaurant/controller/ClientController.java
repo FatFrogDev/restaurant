@@ -1,9 +1,7 @@
 package org.globant.restaurant.controller;
 
-import jakarta.websocket.server.PathParam;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.model.ClientDto;
-import org.globant.restaurant.model.ProductDTO;
 import org.globant.restaurant.service.Client.ClientServiceImpl;
 import org.globant.restaurant.service.Client.IClientService;
 
@@ -12,10 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/clients")
 public class ClientController {
 
     IClientService clientService;
@@ -37,7 +32,7 @@ public class ClientController {
 
     @PutMapping("/{document}")
     public ResponseEntity updateClient(@PathVariable String document, @RequestBody ClientDto clientdto){
-        clientService.updateByDocument(document, clientdto);
+        clientService.updateByDocument(clientdto);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -47,10 +42,4 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @GetMapping("")
-    public ResponseEntity <List<ClientDto>> findByCustomFieldAndOrder2(@RequestParam("orderBy") String fieldCriteria,
-                                                                      @RequestParam("direction") String orderCriteria){
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(clientService.findAllByCustomFieldAndOrder(fieldCriteria, orderCriteria));
-    }
 }

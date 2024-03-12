@@ -3,17 +3,16 @@ package org.globant.restaurant.controller;
 import org.globant.restaurant.model.ProductDTO;
 import org.globant.restaurant.service.Product.IProductService;
 import org.globant.restaurant.service.Product.ProductServiceImpl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+import java.util.Optional;
 import java.util.UUID;
-
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
-public class ProductController { //TODO: Add bonus track implementation (search by fantasyName).
+public class ProductController {
 
     IProductService productService;
 
@@ -22,26 +21,29 @@ public class ProductController { //TODO: Add bonus track implementation (search 
     }
 
     // Create a new product
-    @PostMapping
-    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(productDTO));
+    @PostMapping("")
+    public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO) {
+        return productService.save(productDTO);
     }
 
+    // Consult products by ID
     @GetMapping("/{uuid}")
-    public ResponseEntity<ProductDTO> getProductByUuid(@PathVariable UUID uuid) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findByUuid(uuid));
+    public Optional<?> findByUUID(@PathVariable ProductDTO productDTO) {
+        return productService.findByUUID(productDTO);
     }
 
-    @PutMapping("/{uuid}")
-    public ResponseEntity<Void> updateProduct(@PathVariable UUID uuid, @RequestBody ProductDTO productDTO) {
-        productService.updateByUuid(uuid, productDTO);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
 
-    @DeleteMapping("/{uuid}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable UUID uuid) {
-        productService.deleteByUuid(uuid);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    @GetMapping("/{idProduct}")
+    public ProductDTO getProduct(@PathVariable("idProduct") UUID idProduct){
+        return productService.getProductService(idProduct);
+    }
+    @GetMapping(value = "/all")
+    public List<ProductDTO> getAllProduct(){
+        return productService.getAllProductService();
+    }
+    @PutMapping(value = "/{idProduct}")
+    public ProductDTO updateProduct(@PathVariable("idProduct") UUID idProduct, @RequestBody ProductDTO productDTO) throws Exception{
+        return productService.updateProduct(idProduct, productDTO);
     }
 
 
