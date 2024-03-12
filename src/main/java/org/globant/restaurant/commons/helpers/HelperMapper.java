@@ -1,4 +1,4 @@
-package org.globant.restaurant.helpers;
+package org.globant.restaurant.commons.helpers;
 
 import org.modelmapper.ModelMapper;
 

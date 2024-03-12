@@ -1,5 +1,7 @@
 package org.globant.restaurant.service.Client;
 
+import org.globant.restaurant.commons.constans.endPoints.client.IClientEndPoint;
+import org.globant.restaurant.commons.constans.response.client.IClientResponse;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
 import org.globant.restaurant.exceptions.EntityHasNoDifferentDataException;
@@ -40,7 +42,7 @@ public class ClientServiceImpl implements IClientService {
                 return clientDto;
             }; throw new EntityHasNoDifferentDataException("Client has no different data");
         }
-        throw new EntityAlreadyExistsException("Client already exists");
+        throw new EntityAlreadyExistsException(IClientResponse.CLIENT_EXIST);
     }
 
     @Override
@@ -49,12 +51,11 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(clientDto.getDocument());
 
         if (optionalClient.isPresent()) {
-            if (validator.clientIsUpdatable(clientDto, optionalClient.get())){
-                ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
-                clientEntity.setUuid(optionalClient.get().getUuid());
-                clientRepository.save(clientEntity);
-            }
-        } throw new EntityNotFoundException("Client does not exists");
+            ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
+            clientEntity.setUuid(optionalClient.get().getUuid());
+            //TODO: validate client data doesnt have errors and then update.
+            clientRepository.save(clientEntity);
+        } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
     @Override
@@ -62,15 +63,15 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
         if (optionalClient.isPresent()) {
             clientRepository.deleteByDocument(document);
-        } throw new EntityNotFoundException("Client to delete exists");
+        } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
     @Override
-    public ClientDto findClientByDocument(String document) {
-        Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
-        if (optionalClient.isPresent()) {
-            return converter.convertClientEntityToClientDTO(optionalClient.get());
-        } throw new EntityNotFoundException("Client does not exists");
+    public ClientDto findClientByDocument(String document){
+            Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
+            if (optionalClient.isPresent()) {
+                return converter.convertClientEntityToClientDTO(optionalClient.get());
+            } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
     @Override
