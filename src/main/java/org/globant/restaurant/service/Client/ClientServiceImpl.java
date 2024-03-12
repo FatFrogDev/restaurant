@@ -1,5 +1,7 @@
 package org.globant.restaurant.service.Client;
 
+import org.globant.restaurant.commons.constans.endPoints.client.IClientEndPoint;
+import org.globant.restaurant.commons.constans.response.client.IClientResponse;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
 import org.globant.restaurant.exceptions.EntityNotFoundException;
@@ -29,7 +31,7 @@ public class ClientServiceImpl implements IClientService {
             //TODO: validate client data doesnt have errors and then save.
             clientRepository.save(clientEntity);
             return clientDto;
-        } throw new EntityAlreadyExistsException("Client already exists");
+        } throw new EntityAlreadyExistsException(IClientResponse.CLIENT_EXIST);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class ClientServiceImpl implements IClientService {
             clientEntity.setUuid(optionalClient.get().getUuid());
             //TODO: validate client data doesnt have errors and then update.
             clientRepository.save(clientEntity);
-        } else throw new EntityNotFoundException("Client does not exists");
+        } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
     @Override
@@ -50,7 +52,7 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
         if (optionalClient.isPresent()) {
             clientRepository.deleteByDocument(document);
-        } else throw new EntityNotFoundException("Client to delete exists");
+        } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
     @Override
@@ -58,6 +60,6 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
         if (optionalClient.isPresent()) {
             return converter.convertClientEntityToClientDTO(optionalClient.get());
-        }else throw new EntityNotFoundException("Client does not exists");
+        }else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 }

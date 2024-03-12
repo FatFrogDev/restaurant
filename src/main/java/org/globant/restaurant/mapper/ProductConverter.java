@@ -1,10 +1,8 @@
 package org.globant.restaurant.mapper;
 
 import lombok.extern.log4j.Log4j2;
-import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.entity.ProductEntity;
-import org.globant.restaurant.helpers.HelperMapper;
-import org.globant.restaurant.model.ClientDto;
+import org.globant.restaurant.commons.helpers.HelperMapper;
 import org.globant.restaurant.model.ProductDTO;
 import org.springframework.stereotype.Component;
 
