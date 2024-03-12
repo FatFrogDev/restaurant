@@ -112,4 +112,31 @@ public class ExceptionsHandlerController {
         ErrorDTO error = new ErrorDTO(HttpStatus.BAD_REQUEST, date,"validation error: " + e.getMessage(), InvalidQueryArgsException.class.getSimpleName());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
+
+    /**
+     * Exceptions Handler for ClientHasDifferentDocumentException exception.
+     * This exception is thrown when the received ClientDTO object has a different document that the already existent into the database, and it's not modifiable.<br>
+     * The stats code returned will be BAD_REQUEST (400).
+     * @param e Exception thrown
+     * @return ResponseEntity object with a ErrorDTO which contains the error message.
+     */
+    @ExceptionHandler({ClientHasDifferentDocumentException.class})
+    public ResponseEntity<ErrorDTO> handleIClientHasDifferentDocumentException(ClientHasDifferentDocumentException e) {
+        ErrorDTO error = new ErrorDTO(HttpStatus.BAD_REQUEST, date,"validation error: " + e.getMessage(), ClientHasDifferentDocumentException.class.getSimpleName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    /**
+     * Exceptions Handler for ProductInvalidFantasyName exception.
+     * This exception is thrown when a given product name given has an invalid format. <br>
+     * The stats code returned will be BAD_REQUEST (400).
+     * @param e Exception thrown
+     * @return ResponseEntity object with a ErrorDTO which contains the error message.
+     */
+    @ExceptionHandler({ProductInvalidFantasyName.class})
+    public ResponseEntity<ErrorDTO> handleIProductInvalidFantasyName(ProductInvalidFantasyName e) {
+        ErrorDTO error = new ErrorDTO(HttpStatus.BAD_REQUEST, date,"validation error: " + e.getMessage(), ProductInvalidFantasyName.class.getSimpleName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
 }

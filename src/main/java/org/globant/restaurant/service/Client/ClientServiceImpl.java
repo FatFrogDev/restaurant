@@ -4,6 +4,7 @@ import org.globant.restaurant.commons.constans.endPoints.client.IClientEndPoint;
 import org.globant.restaurant.commons.constans.response.client.IClientResponse;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
+import org.globant.restaurant.exceptions.EntityHasNoDifferentDataException;
 import org.globant.restaurant.exceptions.EntityNotFoundException;
 import org.globant.restaurant.exceptions.InvalidQueryArgsException;
 import org.globant.restaurant.mapper.ClientConverter;
@@ -40,7 +41,6 @@ public class ClientServiceImpl implements IClientService {
             clientRepository.save(clientEntity);
             return clientDto;
         } throw new EntityAlreadyExistsException(IClientResponse.CLIENT_EXIST);
-    }
 
     @Override
     public void updateByDocument(String document, ClientDto clientDto) {
@@ -53,7 +53,7 @@ public class ClientServiceImpl implements IClientService {
             //TODO: validate client data doesnt have errors and then update.
             clientRepository.save(clientEntity);
         } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
-    }
+
 
     @Override
     public void deleteByDocument(String document) {
@@ -61,7 +61,6 @@ public class ClientServiceImpl implements IClientService {
         if (optionalClient.isPresent()) {
             clientRepository.deleteByDocument(document);
         } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
-    }
 
     @Override
     public ClientDto findClientByDocument(String document) {
@@ -69,7 +68,6 @@ public class ClientServiceImpl implements IClientService {
         if (optionalClient.isPresent()) {
             return converter.convertClientEntityToClientDTO(optionalClient.get());
         }else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
-    }
 
     @Override
     public List<ClientDto> findAllByCustomFieldAndOrder(String customField, String customOrder) {
@@ -88,6 +86,6 @@ public class ClientServiceImpl implements IClientService {
                     .map(clientEntity -> converter.convertClientEntityToClientDTO(clientEntity))
                     .toList();
         }
-        else throw new InvalidQueryArgsException("Invalid arguments provided order must be 'asc' or 'desc' & field must be 'name', 'document' or 'address'");
+        throw new InvalidQueryArgsException("Invalid arguments provided order must be 'asc' or 'desc' & field must be 'name', 'document' or 'address'");
     }
 }

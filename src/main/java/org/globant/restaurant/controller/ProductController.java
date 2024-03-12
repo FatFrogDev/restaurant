@@ -46,4 +46,9 @@ public class ProductController {
         return productService.updateProduct(idProduct, productDTO);
     }
 
+
+    @GetMapping("/search")
+    public ResponseEntity<ProductDTO> findProductByFantasyName(@RequestParam("q")String productFantasyName) {
+        return ResponseEntity.status(HttpStatus.OK).body(productService.findProductByFantasyName(productFantasyName));
+    }
 }

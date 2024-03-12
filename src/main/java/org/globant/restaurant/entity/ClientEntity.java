@@ -2,6 +2,7 @@ package org.globant.restaurant.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -22,14 +23,20 @@ public class ClientEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid")
     private UUID uuid;
-    @Column(name = "document")
+
+    @Column(name = "document", unique = true, updatable = false)
     private String document;
+
     @Column(name = "name")
     private String fullName;
-    @Column(name = "email")
+
+    @Column(name = "email", nullable = false, unique = true)
+    @Email
     private String email;
+
     @Column(name = "phone")
     private String phone;
+
     @Column(name = "delivery_address")
     private String deliveryAddress;
 
