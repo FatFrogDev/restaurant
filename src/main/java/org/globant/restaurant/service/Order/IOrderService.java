@@ -1,19 +1,17 @@
 package org.globant.restaurant.service.Order;
 
-import org.globant.restaurant.entity.OrderEntity;
-import org.globant.restaurant.model.OrderSaveDTO;
+import org.globant.restaurant.model.request.OrderSaveRequest;
 import org.globant.restaurant.model.OrderViewDTO;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.http.ResponseEntity;
 
-public interface IOrderService extends CrudRepository<OrderEntity, Long> {
-    String updateOrderByUUID(String id);
+import java.util.UUID;
 
-    String createOrder(String UUID);
+public interface IOrderService {
+    String updateOrderByUUID(UUID id, OrderViewDTO orderViewDTO);
 
-    OrderViewDTO createOrder(OrderViewDTO orderViewDTO);
+      OrderViewDTO createOrder(OrderSaveRequest request);
 
     String deliverOrder();
 
-    ResponseEntity<?> save(OrderSaveDTO orderSaveDTO);
+    ResponseEntity<?> save(OrderSaveRequest orderSaveRequest);
 }

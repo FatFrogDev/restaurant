@@ -1,8 +1,10 @@
 package org.globant.restaurant.mapper;
 
 import lombok.extern.log4j.Log4j2;
+import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.entity.ProductEntity;
 import org.globant.restaurant.helpers.HelperMapper;
+import org.globant.restaurant.model.ClientDto;
 import org.globant.restaurant.model.ProductDTO;
 import org.springframework.stereotype.Component;
 
@@ -17,5 +19,15 @@ public class ProductConverter {
             log.error("Error");
         }
         return productDTO;
+    }
+
+    public ProductEntity convertProductDtoToProductEntity(ProductDTO productDTO) {
+        ProductEntity productEntity = new ProductEntity();
+        try {
+            productEntity= HelperMapper.modelMapper().map(productDTO, ProductEntity.class);
+        } catch (Exception e) {
+            log.error("Error");
+        }
+        return productEntity;
     }
 }

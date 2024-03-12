@@ -42,7 +42,7 @@ public class ProductEntity {
     @Column(nullable = false)
     private boolean available;
 
-    enum Category {
+    public enum Category {
         HAMBURGERS_AND_HOTDOGS,
         CHICKEN,
         FISH,

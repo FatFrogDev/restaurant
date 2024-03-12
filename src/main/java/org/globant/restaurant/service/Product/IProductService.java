@@ -1,18 +1,19 @@
 package org.globant.restaurant.service.Product;
 
+import org.globant.restaurant.model.ClientDto;
 import org.globant.restaurant.model.ProductDTO;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface IProductService {
-     String save(String uuid);
+     ProductDTO save(ProductDTO productDTO);
 
-     String findByUUID();
+     ProductDTO findByUuid(UUID uuid);
 
-     ProductDTO getProductService(UUID idProduct);
+     void updateByUuid(UUID uuid, ProductDTO productDTO);
 
-     List<ProductDTO> getAllProductService();
-
-     ProductDTO updateProduct(UUID idProduct, ProductDTO productDTO) throws Exception;
+     void deleteByUuid(UUID uuid);
 }

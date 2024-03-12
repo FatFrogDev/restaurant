@@ -1,70 +1,90 @@
 package org.globant.restaurant.service.Order;
 
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.entity.OrderEntity;
 import org.globant.restaurant.entity.ProductEntity;
+import org.globant.restaurant.exceptions.EntityNotFoundException;
 import org.globant.restaurant.mapper.OrderConverter;
+import org.globant.restaurant.mapper.ProductConverter;
+import org.globant.restaurant.model.request.OrderSaveRequest;
 import org.globant.restaurant.model.OrderViewDTO;
 import org.globant.restaurant.repository.Client.IClientRepository;
 import org.globant.restaurant.repository.Order.IOrderRepository;
-import org.globant.restaurant.repository.Product.ProductRepository;
+import org.globant.restaurant.repository.Product.IProductRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
-
-@AllArgsConstructor
-@NoArgsConstructor
 @Service
-public class OrderServiceImpl{
+public class OrderServiceImpl implements IOrderService{
 
-    private IOrderRepository orderRepository;
+    private final IOrderRepository orderRepository;
 
-    private OrderConverter converter;
+    private final IProductRepository productRepository;
 
-    private ProductRepository productRepository;
+    private final IClientRepository clientRepository;
 
-    private IClientRepository clientRepository;
+    private final OrderConverter orderConverter;
 
-    private OrderConverter orderConverter;
+    public OrderServiceImpl(
+            IProductRepository productRepository, IClientRepository clientRepository,
+            OrderConverter orderConverter, IOrderRepository orderRepository) {
+        this.productRepository = productRepository;
+        this.clientRepository = clientRepository;
+        this.orderConverter = orderConverter;
+        this.orderRepository = orderRepository;
+    }
 
+    @Override
+    public String updateOrderByUUID(UUID id, OrderViewDTO orderViewDTO) {
+        Optional<OrderEntity> existingOrderOptional = orderRepository.findByUuid(id);
 
-    public OrderViewDTO createOrder(OrderViewDTO orderViewDTO){
+        OrderEntity existingOrder = existingOrderOptional.orElseThrow(() -> new EntityNotFoundException("Order not found"));
+
+        existingOrder.setClientDocument(orderViewDTO.getClientDocument());
+        existingOrder.setProductUuid((Set<ProductEntity>) orderViewDTO.getProductUUID());
+        orderRepository.save(existingOrder);
+
+        return "Update Successfully";
+
+    }
+
+    public OrderViewDTO createOrder(OrderSaveRequest request){
         try {
-            Optional<ProductEntity> productResult = this.productRepository.findById(orderViewDTO.getProductUUID().getId());
-            Optional<ClientEntity> clientResult = this.clientRepository.findById(UUID.fromString(orderViewDTO.getClientDocument().getDocument()));
-            if(productResult.isPresent()&&clientResult.isPresent()){
-                ProductEntity prodct = productResult.get();
-                double price = prodct.getPrice();
-                Integer quantity = orderViewDTO.getQuantity();
-                orderViewDTO.setClientDocument(orderViewDTO.getClientDocument());
-                orderViewDTO.setProductUUID(orderViewDTO.getProductUUID());
-                orderViewDTO.setQuantity(orderViewDTO.getQuantity());
-                orderViewDTO.setExtraInformation(orderViewDTO.getExtraInformation());
-                orderViewDTO.setCreationDateTime(LocalDateTime.now());
-                orderViewDTO.setUuid(UUID.randomUUID());
+            OrderViewDTO orderViewDTO = new OrderViewDTO();
 
-                double subtotal = quantity * price;
-                orderViewDTO.setSubTotal(subtotal);
+            Optional<ProductEntity> productResult = productRepository.findByUuid(request.getProductUUID());
+            Optional<ClientEntity> clientResult = clientRepository.findByDocument(request.getClientDocument());
 
-                double tax = subtotal* 0.19;
-                orderViewDTO.setTax(tax);
+            ClientEntity client = clientResult.orElseThrow(() -> new EntityNotFoundException("Client is empty"));
+            ProductEntity product = productResult.orElseThrow(() -> new EntityNotFoundException("Product is empty"));
 
-                double granTotal = subtotal + tax;
-                orderViewDTO.setGrandTotal(granTotal);
+            double price = product.getPrice();
+            int quantity = request.getQuantity();
+            orderViewDTO.setClientDocument(client);
+            orderViewDTO.setProductUUID(orderViewDTO.getProductUUID());
+            orderViewDTO.setQuantity(request.getQuantity());
+            orderViewDTO.setExtraInformation(request.getExtraInformation());
+            orderViewDTO.setCreationDateTime(LocalDateTime.now());
+            orderViewDTO.setUuid(UUID.randomUUID());
 
-                OrderEntity order = orderConverter.DtoToEntity(orderViewDTO);
-                return orderConverter.EntityToDto(orderRepository.save(order));
+            double subtotal = quantity * price;
+            orderViewDTO.setSubTotal(subtotal);
 
-            }else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-            }
+            double tax = subtotal* 0.19;
+            orderViewDTO.setTax(tax);
+
+            double granTotal = subtotal + tax;
+            orderViewDTO.setGrandTotal(granTotal);
+
+            OrderEntity order = orderConverter.dtoToEntity(orderViewDTO);
+            return orderConverter.entityToDto(orderRepository.save(order));
 
         } catch (Exception e){
             e.printStackTrace();
@@ -72,8 +92,15 @@ public class OrderServiceImpl{
             }
     }
 
+    @Override
+    public String deliverOrder() {
+        return null;
+    }
 
-
+    @Override
+    public ResponseEntity<?> save(OrderSaveRequest orderSaveRequest) {
+        return null;
+    }
 
 
 }
