@@ -39,7 +39,7 @@ public class ClientServiceImpl implements IClientService {
             if(validator.isSavableClient(clientDto)){
                 return converter.convertClientEntityToClientDTO
                                 (clientRepository.save(clientEntity));
-            } throw new EntityHasNoDifferentDataException("Client has no different data");
+            } throw new EntityHasNoDifferentDataException(IClientResponse.CLIENT_DIFFERENT_DATA);
         }
         throw new EntityAlreadyExistsException(IClientResponse.CLIENT_EXIST);
     }
@@ -54,7 +54,7 @@ public class ClientServiceImpl implements IClientService {
                 ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
                 clientEntity.setUuid(optionalClient.get().getUuid());
                 clientRepository.save(clientEntity);
-            } throw new EntityHasNoDifferentDataException("Client has no different data");
+            } throw new EntityHasNoDifferentDataException(IClientResponse.CLIENT_DIFFERENT_DATA);
         } throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
@@ -91,6 +91,6 @@ public class ClientServiceImpl implements IClientService {
                     .map(converter::convertClientEntityToClientDTO)
                     .toList();
         }
-        throw new InvalidQueryArgsException("Invalid arguments provided order must be 'asc' or 'desc' & field must be 'name', 'document' or 'address'");
+        throw new InvalidQueryArgsException(IClientResponse.CLIENT_INVALID_ARGUMENTS);
     }
 }

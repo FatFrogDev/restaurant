@@ -6,4 +6,5 @@ public interface IClientEndPoint {
     String CREATE_CLIENT = "";
     String UPDATE_CLIENT = "/{document}";
     String DELETE_CLIENT = "/{document}";
+    String FIND_CUSTOM_FIELD_ORDER = "";
 }
