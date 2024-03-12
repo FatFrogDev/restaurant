@@ -1,6 +1,6 @@
 package org.globant.restaurant.controller;
 
-import org.globant.restaurant.entity.ClientEntity;
+
 import org.globant.restaurant.model.ClientDto;
 import org.globant.restaurant.service.Client.ClientServiceImpl;
 import org.globant.restaurant.service.Client.IClientService;

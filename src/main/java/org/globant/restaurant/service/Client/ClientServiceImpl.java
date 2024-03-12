@@ -1,6 +1,5 @@
 package org.globant.restaurant.service.Client;
 
-import org.globant.restaurant.commons.constans.endPoints.client.IClientEndPoint;
 import org.globant.restaurant.commons.constans.response.client.IClientResponse;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
@@ -34,13 +33,13 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     public ClientDto save(ClientDto clientDto) {
-        Optional<ClientEntity> client = clientRepository.findByDocument(clientDto.getDocument());
+        Optional<ClientEntity> optionalClient = clientRepository.findByDocument(clientDto.getDocument());
         ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
-        if (!client.isPresent()){
+        if (!optionalClient.isPresent()){
             if(validator.isSavableClient(clientDto)){
-                clientRepository.save(clientEntity); // TODO: refactor this to return the saved entity.
-                return clientDto;
-            }; throw new EntityHasNoDifferentDataException("Client has no different data");
+                return converter.convertClientEntityToClientDTO
+                                (clientRepository.save(clientEntity));
+            } throw new EntityHasNoDifferentDataException("Client has no different data");
         }
         throw new EntityAlreadyExistsException(IClientResponse.CLIENT_EXIST);
     }
@@ -51,11 +50,12 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(clientDto.getDocument());
 
         if (optionalClient.isPresent()) {
-            ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
-            clientEntity.setUuid(optionalClient.get().getUuid());
-            //TODO: validate client data doesnt have errors and then update.
-            clientRepository.save(clientEntity);
-        } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
+            if(validator.clientIsUpdatable(clientDto, optionalClient.get())){
+                ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
+                clientEntity.setUuid(optionalClient.get().getUuid());
+                clientRepository.save(clientEntity);
+            }throw new EntityHasNoDifferentDataException("Client has no different data");
+        } throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class ClientServiceImpl implements IClientService {
             List<ClientEntity> clientEntities = clientRepository.findAll(sort);
 
             return clientEntities.stream()
-                    .map(clientEntity -> converter.convertClientEntityToClientDTO(clientEntity))
+                    .map(converter::convertClientEntityToClientDTO)
                     .toList();
         }
         throw new InvalidQueryArgsException("Invalid arguments provided order must be 'asc' or 'desc' & field must be 'name', 'document' or 'address'");
