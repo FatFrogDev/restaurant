@@ -89,6 +89,31 @@ class ClientServiceImplTest {
     }
 
     @Test
+    void shouldReturnErrorOrDifferentDocumentNumber() {
+        Mockito.when(clientRepository.findByDocument(clientDto.getDocument()))
+                .thenReturn(Optional.of(clientEntity));
+
+        ClientDto updatedClientDto = ClientDto.builder()
+                .document("987654321")
+                .fullName("Juan Perez")
+                .email("email@gmail.com")
+                .phone("123456789")
+                .deliveryAddress("Calle 123")
+                .build();
+
+        System.out.println("Documento anterior: " + clientDto.getDocument());
+        System.out.println("Nuevo documento: " + updatedClientDto.getDocument());
+        
+        System.out.println("Ejecutando prueba shouldReturnErrorOrDifferentDocumentNumber");
+
+        Assertions.assertThrows(EntityHasNoDifferentDataException.class, () -> {
+            clientService.updateByDocument(clientDto.getDocument(), updatedClientDto);
+        });
+
+        System.out.println("Prueba completada");
+    }
+
+    @Test
     void deleteByDocument() {
     }
 
