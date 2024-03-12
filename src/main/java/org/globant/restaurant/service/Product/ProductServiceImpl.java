@@ -17,11 +17,11 @@ import java.util.UUID;
 @Service
 public class ProductServiceImpl implements IProductService {
 
-    IProductRepository productRepository;
+    private final IProductRepository productRepository;
 
-    ProductConverter productConverter;
+    private final ProductConverter productConverter;
 
-    ProductValidators validator;
+    private final ProductValidators validator;
 
     public ProductServiceImpl(IProductRepository productRepository, ProductConverter productConverter, ProductValidators validator) {
         this.productRepository = productRepository;

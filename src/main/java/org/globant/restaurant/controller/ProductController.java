@@ -2,8 +2,8 @@ package org.globant.restaurant.controller;
 
 import org.globant.restaurant.model.ProductDTO;
 import org.globant.restaurant.service.Product.IProductService;
-import org.globant.restaurant.service.Product.ProductServiceImpl;
 import org.springframework.http.HttpStatus;
+import org.globant.restaurant.service.Product.ProductServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +15,7 @@ import java.util.UUID;
 @RequestMapping("/products")
 public class ProductController { //TODO: Add bonus track implementation (search by fantasyName).
 
-    IProductService productService;
+    private final IProductService productService;
 
     public ProductController(ProductServiceImpl productService) {
         this.productService = productService;

@@ -18,11 +18,11 @@ import java.util.Optional;
 @Service
 public class ClientServiceImpl implements IClientService {
 
-    IClientRepository clientRepository;
+    private final IClientRepository clientRepository;
 
-    ClientConverter converter;
+    private final ClientConverter converter;
 
-    ClientValidators validator;
+    private final ClientValidators validator;
 
     public ClientServiceImpl(IClientRepository clientRepository, ClientConverter converter, ClientValidators validator) {
         this.clientRepository = clientRepository;
@@ -36,7 +36,7 @@ public class ClientServiceImpl implements IClientService {
         ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
         if (!client.isPresent()){
             if(validator.isSavableClient(clientDto)){
-                clientRepository.save(clientEntity);
+                clientRepository.save(clientEntity); // TODO: refactor this to return the saved entity.
                 return clientDto;
             }; throw new EntityHasNoDifferentDataException("Client has no different data");
         }

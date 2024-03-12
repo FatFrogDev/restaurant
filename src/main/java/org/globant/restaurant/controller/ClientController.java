@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/clients")
 public class ClientController {
 
-    IClientService clientService;
+    private final IClientService clientService;
 
     public ClientController(ClientServiceImpl clientService) {
         this.clientService = clientService;
