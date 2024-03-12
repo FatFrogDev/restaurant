@@ -19,7 +19,7 @@ public class ProductConverter {
         return productDTO;
     }
 
-    public ProductEntity covertProductDtoToProductEntity(ProductDTO productDTO) {
+    public ProductEntity convertProductDtoToProductEntity(ProductDTO productDTO) {
         ProductEntity productEntity = new ProductEntity();
         try {
             productEntity= HelperMapper.modelMapper().map(productDTO, ProductEntity.class);

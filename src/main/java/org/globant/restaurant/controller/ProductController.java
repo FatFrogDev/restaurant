@@ -1,6 +1,5 @@
 package org.globant.restaurant.controller;
 
-import org.globant.restaurant.commons.constans.endPoints.product.IProductEndPoint;
 import org.globant.restaurant.model.ProductDTO;
 import org.globant.restaurant.service.Product.IProductService;
 import org.globant.restaurant.service.Product.ProductServiceImpl;
@@ -12,7 +11,7 @@ import java.util.UUID;
 import java.util.List;
 
 @RestController
-@RequestMapping(IProductEndPoint.BASE_URL_PRODUCT)
+@RequestMapping("/products")
 public class ProductController {
 
     IProductService productService;
@@ -22,27 +21,27 @@ public class ProductController {
     }
 
     // Create a new product
-    @PostMapping(IProductEndPoint.CREATE_PRODUCT)
+    @PostMapping("")
     public ResponseEntity<?> createProduct(@RequestBody ProductDTO productDTO) {
         return productService.save(productDTO);
     }
 
     // Consult products by ID
-    @GetMapping(IProductEndPoint.FIND_PRODUCT_UUID)
+    @GetMapping("/{uuid}")
     public Optional<?> findByUUID(@PathVariable ProductDTO productDTO) {
         return productService.findByUUID(productDTO);
     }
 
 
-    @GetMapping(IProductEndPoint.GET_PRODUCT)
+    @GetMapping("/{idProduct}")
     public ProductDTO getProduct(@PathVariable("idProduct") UUID idProduct){
         return productService.getProductService(idProduct);
     }
-    @GetMapping(IProductEndPoint.GET_ALL_PRODUCT)
+    @GetMapping(value = "/all")
     public List<ProductDTO> getAllProduct(){
         return productService.getAllProductService();
     }
-    @PutMapping(IProductEndPoint.UPDATE_PRODUCT)
+    @PutMapping(value = "/{idProduct}")
     public ProductDTO updateProduct(@PathVariable("idProduct") UUID idProduct, @RequestBody ProductDTO productDTO) throws Exception{
         return productService.updateProduct(idProduct, productDTO);
     }
