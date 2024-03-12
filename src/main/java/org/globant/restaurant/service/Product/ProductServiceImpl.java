@@ -1,5 +1,6 @@
 package org.globant.restaurant.service.Product;
 
+import org.globant.restaurant.commons.constans.response.product.IProductResponse;
 import org.globant.restaurant.controller.ProductController;
 import org.globant.restaurant.entity.ProductEntity;
 import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
@@ -34,7 +35,7 @@ public class ProductServiceImpl implements IProductService {
         Optional<ProductEntity> existingProduct = productRepository.findByFantasyName(productDTO.getFantasyName().toUpperCase());
 
         if (existingProduct.isPresent()) {
-            throw new EntityAlreadyExistsException("Product with fantasy name already exists");
+            throw new EntityAlreadyExistsException(IProductResponse.PRODUCT_EXIST);
         }
 
         ProductEntity productEntity = productConverter.convertProductDtoToProductEntity(productDTO);
@@ -52,14 +53,14 @@ public class ProductServiceImpl implements IProductService {
         Optional<ProductEntity> productOptional = productRepository.findByUuid(uuid);
 
         return productOptional.map(productConverter::convertProductEntityToProductDTO)
-                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+                .orElseThrow(() -> new EntityNotFoundException(IProductResponse.PRODUCT_NOT_FOUND));
     }
 
     @Override
     public void updateByUuid(UUID uuid, ProductDTO productDTO) { // TODO: Refactor validations; set validations in a ProductValidators class
         Optional<ProductEntity> existingProductOptional = productRepository.findByUuid(uuid);
 
-        ProductEntity existingProduct = existingProductOptional.orElseThrow(() -> new EntityNotFoundException("Product not found"));
+        ProductEntity existingProduct = existingProductOptional.orElseThrow(() -> new EntityNotFoundException(IProductResponse.PRODUCT_NOT_FOUND));
 
         boolean hasChanges = false;
 
@@ -89,7 +90,7 @@ public class ProductServiceImpl implements IProductService {
         }
 
         if (!hasChanges) {
-            throw new EntityNotFoundException("No changes detected in the request");
+            throw new EntityNotFoundException(IProductResponse.PRODUCT_NOT_CHANGES);
         }
 
         productRepository.save(existingProduct);
@@ -102,7 +103,7 @@ public class ProductServiceImpl implements IProductService {
         productOptional.ifPresentOrElse(
                 product -> productRepository.deleteByUuid(uuid),
                 () -> {
-                    throw new EntityNotFoundException("Product not found");
+                    throw new EntityNotFoundException(IProductResponse.PRODUCT_NOT_FOUND);
                 }
         );
     }
@@ -116,8 +117,8 @@ public class ProductServiceImpl implements IProductService {
                 return productConverter.
                         convertProductEntityToProductDTO(optionalProductEntity.get());
             }
-            throw new EntityNotFoundException("Product with fantasy name : " + fantasyName + "  does not exists.");
+            throw new EntityNotFoundException(IProductResponse.PRODUCT_NOT_EXIST + fantasyName);
         }
-        throw new ProductInvalidFantasyName("Fantasy name format is invalid");
+        throw new ProductInvalidFantasyName(IProductResponse.PRODUCT_FORMAT_INVALID);
     }
 }

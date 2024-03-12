@@ -1,6 +1,7 @@
 package org.globant.restaurant.validators;
 
 import jakarta.validation.Valid;
+import org.globant.restaurant.commons.constans.response.client.IClientResponse;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.exceptions.ClientHasDifferentDocumentException;
 import org.globant.restaurant.exceptions.ClientInvalidDocumentFormatException;
@@ -103,7 +104,7 @@ public class ClientValidators {
             return true;
         }
 
-        throw new EntityHasNoDifferentDataException("The client has no changes to be updated.");
+        throw new EntityHasNoDifferentDataException(IClientResponse.CLIENT_NOT_CHANGES);
     };
 
     /**
@@ -120,9 +121,9 @@ public class ClientValidators {
         if (clientDocumentIsValid(clientDto.getDocument())) {
             if (clientDto.getDocument().equals(entity.getDocument())) {
                 return clientHasChanges(clientDto, entity);
-            } throw new ClientHasDifferentDocumentException("The document of the client cannot be updated.");
+            } throw new ClientHasDifferentDocumentException(IClientResponse.CLIENT_NOT_CHANGES_DOCUMENT);
         }
-        throw new ClientInvalidDocumentFormatException("The document has an incorrect format.");
+        throw new ClientInvalidDocumentFormatException(IClientResponse.CLIENT_INVALID_FORMAT_DOCUMENT);
     };
 
     /**
@@ -139,6 +140,6 @@ public class ClientValidators {
                 && (!(document.isBlank()) && (document.length()<=20))
                 && matcher.matches()){
                 return true;
-        } throw new ClientInvalidDocumentFormatException("The document has an incorrect format.");
+        } throw new ClientInvalidDocumentFormatException(IClientResponse.CLIENT_INVALID_FORMAT_DOCUMENT);
     };
 }
