@@ -54,7 +54,7 @@ public class ClientServiceImpl implements IClientService {
                 ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
                 clientEntity.setUuid(optionalClient.get().getUuid());
                 clientRepository.save(clientEntity);
-            }throw new EntityHasNoDifferentDataException("Client has no different data");
+            } throw new EntityHasNoDifferentDataException("Client has no different data");
         } throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
@@ -63,7 +63,7 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
         if (optionalClient.isPresent()) {
             clientRepository.deleteByDocument(document);
-        } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
+        } throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ClientServiceImpl implements IClientService {
             Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
             if (optionalClient.isPresent()) {
                 return converter.convertClientEntityToClientDTO(optionalClient.get());
-            } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
+            } throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
     @Override

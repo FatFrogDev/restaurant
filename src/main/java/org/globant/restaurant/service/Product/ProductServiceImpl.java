@@ -108,12 +108,13 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ProductDTO findProductByFantasyName(String fantasyName) {
+    public ProductDTO findByFantasyName(String fantasyName) {
         if (validator.productFantasyNameIsValid(fantasyName.toUpperCase())) {
             Optional<ProductEntity> optionalProductEntity = productRepository.findByFantasyName(fantasyName);
 
             if (optionalProductEntity.isPresent()) {
-                return productConverter.convertProductEntityToProductDTO(optionalProductEntity.get());
+                return productConverter.
+                        convertProductEntityToProductDTO(optionalProductEntity.get());
             }
             throw new EntityNotFoundException("Product with fantasy name : " + fantasyName + "  does not exists.");
         }

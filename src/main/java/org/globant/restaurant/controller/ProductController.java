@@ -1,16 +1,15 @@
 package org.globant.restaurant.controller;
 
 import org.globant.restaurant.model.ProductDTO;
-import org.globant.restaurant.service.Product.IProductService;
+import org.globant.restaurant.service.Product.*;
 import org.springframework.http.HttpStatus;
-import org.globant.restaurant.service.Product.ProductServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.UUID;
 
 
+@SuppressWarnings("ALL")
 @RestController
 @RequestMapping("/products")
 public class ProductController { //TODO: Add bonus track implementation (search by fantasyName).
@@ -47,6 +46,6 @@ public class ProductController { //TODO: Add bonus track implementation (search 
 
     @GetMapping("/search")
     public ResponseEntity<ProductDTO> findProductByFantasyName(@RequestParam("q")String productFantasyName) {
-        return ResponseEntity.status(HttpStatus.OK).body(productService.findProductByFantasyName(productFantasyName));
+        return ResponseEntity.status(HttpStatus.OK).body(productService.findByFantasyName(productFantasyName));
     }
 }

@@ -2,7 +2,6 @@ package org.globant.restaurant.service.Product;
 
 import org.globant.restaurant.model.ProductDTO;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public interface IProductService {
@@ -14,5 +13,5 @@ public interface IProductService {
 
      void deleteByUuid(UUID uuid);
 
-    ProductDTO findProductByFantasyName(String fantasyName);
+    ProductDTO findByFantasyName(String fantasyName);
 }

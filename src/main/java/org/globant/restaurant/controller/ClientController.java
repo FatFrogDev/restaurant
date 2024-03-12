@@ -10,7 +10,10 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@RequestMapping("/clients")
 public class ClientController {
 
     private final IClientService clientService;
@@ -42,4 +45,10 @@ public class ClientController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @GetMapping("")
+    public ResponseEntity <List<ClientDto>> findByCustomFieldAndOrder2(@RequestParam("orderBy") String fieldCriteria,
+                                                                       @RequestParam("direction") String orderCriteria){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(clientService.findAllByCustomFieldAndOrder(fieldCriteria, orderCriteria));
+    }
 }

@@ -121,7 +121,7 @@ public class ExceptionsHandlerController {
      * @return ResponseEntity object with a ErrorDTO which contains the error message.
      */
     @ExceptionHandler({ClientHasDifferentDocumentException.class})
-    public ResponseEntity<ErrorDTO> handleIClientHasDifferentDocumentException(ClientHasDifferentDocumentException e) {
+    public ResponseEntity<ErrorDTO> handleClientHasDifferentDocumentException(ClientHasDifferentDocumentException e) {
         ErrorDTO error = new ErrorDTO(HttpStatus.BAD_REQUEST, date,"validation error: " + e.getMessage(), ClientHasDifferentDocumentException.class.getSimpleName());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
@@ -134,8 +134,22 @@ public class ExceptionsHandlerController {
      * @return ResponseEntity object with a ErrorDTO which contains the error message.
      */
     @ExceptionHandler({ProductInvalidFantasyName.class})
-    public ResponseEntity<ErrorDTO> handleIProductInvalidFantasyName(ProductInvalidFantasyName e) {
+    public ResponseEntity<ErrorDTO> handleProductInvalidFantasyName(ProductInvalidFantasyName e) {
         ErrorDTO error = new ErrorDTO(HttpStatus.BAD_REQUEST, date,"validation error: " + e.getMessage(), ProductInvalidFantasyName.class.getSimpleName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+
+    /**
+     * Exceptions Handler for EntityHasNoDifferentDataException exception.
+     * This exception is thrown when given entity DTO has no different data compared to the already existent into the database. <br>
+     * The stats code returned will be BAD_REQUEST (400).
+     * @param e Exception thrown
+     * @return ResponseEntity object with a ErrorDTO which contains the error message.
+     */
+    @ExceptionHandler({EntityHasNoDifferentDataException.class})
+    public ResponseEntity<ErrorDTO> handleEntityHasNoDifferentDataException(EntityHasNoDifferentDataException e) {
+        ErrorDTO error = new ErrorDTO(HttpStatus.BAD_REQUEST, date,"validation error: " + e.getMessage(), EntityHasNoDifferentDataException.class.getSimpleName());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
