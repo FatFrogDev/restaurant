@@ -11,6 +11,7 @@ import org.globant.restaurant.model.ProductDTO;
 import org.globant.restaurant.repository.Product.IProductRepository;
 import org.globant.restaurant.validators.ProductValidators;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -57,46 +58,38 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public void updateByUuid(UUID uuid, ProductDTO productDTO) { // TODO: Refactor validations; set validations in a ProductValidators class
+    public void updateByUuid(UUID uuid, ProductDTO productDTO) {
         Optional<ProductEntity> existingProductOptional = productRepository.findByUuid(uuid);
 
         ProductEntity existingProduct = existingProductOptional.orElseThrow(() -> new EntityNotFoundException(IProductResponse.PRODUCT_NOT_FOUND));
 
-        boolean hasChanges = false;
+        if (validator.productIsUpdatable(productDTO, existingProduct)) {
+            if (productDTO.getFantasyName() != null) {
+                existingProduct.setFantasyName(productDTO.getFantasyName().toUpperCase());
+            }
 
-        if (productDTO.getFantasyName() != null && !productDTO.getFantasyName().equalsIgnoreCase(existingProduct.getFantasyName())) {
-            existingProduct.setFantasyName(productDTO.getFantasyName().toUpperCase());
-            hasChanges = true;
+            if (productDTO.getCategory() != null) {
+                existingProduct.setCategory(ProductEntity.Category.valueOf(productDTO.getCategory()));
+            }
+
+            if (productDTO.getDescription() != null) {
+                existingProduct.setDescription(productDTO.getDescription());
+            }
+
+            if (productDTO.getPrice() != null) {
+                existingProduct.setPrice(Double.parseDouble(productDTO.getPrice()));
+            }
+
+            if (productDTO.getAvailable() != null) {
+                existingProduct.setAvailable(productDTO.getAvailable());
+            }
+
+            productRepository.save(existingProduct);
         }
-
-        if (productDTO.getCategory() != null && !productDTO.getCategory().equals(existingProduct.getCategory().name())) {
-            existingProduct.setCategory(ProductEntity.Category.valueOf(productDTO.getCategory()));
-            hasChanges = true;
-        }
-
-        if (productDTO.getDescription() != null && !productDTO.getDescription().equals(existingProduct.getDescription())) {
-            existingProduct.setDescription(productDTO.getDescription());
-            hasChanges = true;
-        }
-
-        if (productDTO.getPrice() != null && !productDTO.getPrice().equals(String.valueOf(existingProduct.getPrice()))) {
-            existingProduct.setPrice(Double.parseDouble(productDTO.getPrice()));
-            hasChanges = true;
-        }
-
-        if (productDTO.getAvailable() != null && productDTO.getAvailable() != existingProduct.isAvailable()) {
-            existingProduct.setAvailable(productDTO.getAvailable());
-            hasChanges = true;
-        }
-
-        if (!hasChanges) {
-            throw new EntityNotFoundException(IProductResponse.PRODUCT_NOT_CHANGES);
-        }
-
-        productRepository.save(existingProduct);
     }
 
     @Override
+    @Transactional
     public void deleteByUuid(UUID uuid) {
         Optional<ProductEntity> productOptional = productRepository.findByUuid(uuid);
 
