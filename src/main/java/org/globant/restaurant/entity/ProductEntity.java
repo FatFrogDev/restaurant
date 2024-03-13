@@ -1,6 +1,5 @@
 package org.globant.restaurant.entity;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -37,7 +36,7 @@ public class ProductEntity {
     private String description;
 
     @Column(nullable = false)
-    private double price;
+    private Double price;
 
     @NotNull
     @Column(nullable = false)
@@ -52,18 +51,4 @@ public class ProductEntity {
         VEGAN_FOOD,
         KIDS_MEALS
     }
-
-    @Override
-    public String toString() {
-        return "ProductEntity{" +
-                "id=" + id +
-                ", uuid=" + uuid +
-                ", fantasyName='" + fantasyName + '\'' +
-                ", category=" + category +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", available=" + available +
-                '}';
-    }
-
 }
