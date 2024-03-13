@@ -11,11 +11,11 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderSaveRequest {
+public class OrderRequest {
 
     private String clientDocument;
 
-    private String productUuid;
+    private UUID productUuid;
 
     private  int quantity;
 

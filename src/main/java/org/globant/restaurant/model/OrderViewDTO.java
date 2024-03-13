@@ -12,7 +12,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 public class OrderViewDTO {
-    private String uuid;
+    private UUID uuid;
     private LocalDateTime creationDateTime;
     private String clientDocument;
     private String productUUID;

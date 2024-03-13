@@ -10,16 +10,11 @@ import org.springframework.stereotype.Component;
 public class OrderConverter {
 
     public OrderViewDTO entityToDto(OrderEntity orderEntity) {
-
-        // Uses "findFirst" to get the product id due to is assumed that the order has a collection of the same product
-            String productUUID =
-                    orderEntity.getProduct().getUuid();
-
             return OrderViewDTO.builder()
                 .uuid(orderEntity.getUuid())
                 .creationDateTime(orderEntity.getCreationDateTime())
                 .clientDocument(orderEntity.getClient().getDocument())
-                .productUUID(productUUID)
+                .productUUID(orderEntity.getProduct().getUuid())
                 .quantity(orderEntity.getQuantity())
                 .extraInformation(orderEntity.getExtraInformation())
                 .subTotal(orderEntity.getSubTotal())
@@ -33,9 +28,7 @@ public class OrderConverter {
     public OrderEntity dtoToEntity(OrderViewDTO orderViewDTO) {
         return OrderEntity.builder()
                 .creationDateTime(orderViewDTO.getCreationDateTime())
-                // TODO: verify!
                 .quantity(orderViewDTO.getQuantity())
-                // TODO: verify!
                 .extraInformation(orderViewDTO.getExtraInformation())
                 .subTotal(orderViewDTO.getSubTotal())
                 .tax(orderViewDTO.getTax())

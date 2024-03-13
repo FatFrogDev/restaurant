@@ -25,7 +25,7 @@ public class OrderEntity {
     private Long id;
 
     @Column(unique = true)
-    private String uuid;
+    private UUID uuid;
 
     @Column(nullable = false)
     private LocalDateTime creationDateTime;

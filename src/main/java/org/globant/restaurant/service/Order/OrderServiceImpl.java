@@ -7,88 +7,90 @@ import org.globant.restaurant.entity.OrderEntity;
 import org.globant.restaurant.entity.ProductEntity;
 import org.globant.restaurant.exceptions.EntityNotFoundException;
 import org.globant.restaurant.mapper.OrderConverter;
-import org.globant.restaurant.model.request.OrderSaveRequest;
+import org.globant.restaurant.model.request.OrderRequest;
 import org.globant.restaurant.model.OrderViewDTO;
 import org.globant.restaurant.repository.Client.IClientRepository;
 import org.globant.restaurant.repository.Order.IOrderRepository;
 import org.globant.restaurant.repository.Product.IProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.UUID;
 
 
 @Service
-public class OrderServiceImpl implements IOrderService{
+public class OrderServiceImpl implements IOrderService {
+    @Autowired
+    private IOrderRepository orderRepository;
 
-    private final IOrderRepository orderRepository;
+    @Autowired
+    private IProductRepository productRepository;
 
-    private final IProductRepository productRepository;
+    @Autowired
+    private IClientRepository clientRepository;
 
-    private final IClientRepository clientRepository;
-
-    private final OrderConverter orderConverter;
-
-
-
-    public OrderServiceImpl(IOrderRepository orderRepository, IProductRepository productRepository, IClientRepository clientRepository, OrderConverter orderConverter) {
-        this.orderRepository = orderRepository;
-        this.productRepository = productRepository;
-        this.clientRepository = clientRepository;
-        this.orderConverter = orderConverter;
-    }
+    @Autowired
+    private OrderConverter orderConverter;
 
     private final double TAX = 0.19D;
 
     @Override
-    public OrderViewDTO updateByUUID(String orderUuid, LocalDateTime deliveredTimestamp){
-        Optional<OrderEntity> optionalOrder = orderRepository.findByUuid(orderUuid);
-        //TODO: Add validations
-        if (optionalOrder.isPresent()) {
-            optionalOrder.get().setDeliveryDate(deliveredTimestamp);
-            optionalOrder.get().setDelivered(Boolean.TRUE);
-            orderRepository.save(optionalOrder.get());
-            return orderConverter.entityToDto(optionalOrder.get());
-        } throw new EntityNotFoundException("Order not found");
+    public OrderViewDTO updateByUUID(UUID orderUuid, LocalDateTime deliveredTimestamp) throws Exception {
+        try {
+            Optional<OrderEntity> optionalOrder = orderRepository.findByUuid(orderUuid);
+
+            OrderEntity order = optionalOrder.orElseThrow(() -> new EntityNotFoundException("Order is empty"));
+
+            order.setDeliveryDate(deliveredTimestamp);
+            order.setDelivered(Boolean.TRUE);
+            orderRepository.save(order);
+            return orderConverter.entityToDto(order);
+
+        } catch (EntityNotFoundException ex) {
+            throw new Exception(ex.getMessage());
+        }
     }
 
     @Override
-    public OrderViewDTO save(OrderSaveRequest orderSaveRequestDTO){
-        //TODO: Validate incoming data
-        // Check existence of the entities.
-        Optional<ProductEntity> productEntity = productRepository.findByUuidAndAvailableIsTrue(orderSaveRequestDTO.getProductUuid());
-        Optional<ClientEntity> clientEntity = clientRepository.findByDocument(orderSaveRequestDTO.getClientDocument());
+    public OrderViewDTO save(OrderRequest request){
+        try {
+            OrderViewDTO orderViewDTO = new OrderViewDTO();
 
-        if (productEntity.isEmpty()) {
-            throw new EntityNotFoundException(IProductResponse.PRODUCT_NOT_FOUND);
-        }if(clientEntity.isEmpty()){
-            throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
+            Optional<ProductEntity> productResult = productRepository.findByUuid(request.getProductUuid());
+            Optional<ClientEntity> clientResult = clientRepository.findByDocument(request.getClientDocument());
+
+            ClientEntity client = clientResult.orElseThrow(() -> new EntityNotFoundException("Client is empty"));
+            ProductEntity product = productResult.orElseThrow(() -> new EntityNotFoundException("Product is empty"));
+
+            double price = product.getPrice();
+            int quantity = request.getQuantity();
+            orderViewDTO.setClientDocument(client.getDocument());
+            orderViewDTO.setProductUUID(product.getUuid());
+            orderViewDTO.setQuantity(request.getQuantity());
+            orderViewDTO.setExtraInformation(request.getExtraInformation());
+            orderViewDTO.setCreationDateTime(LocalDateTime.now());
+            orderViewDTO.setUuid(UUID.randomUUID());
+
+            double subtotal = quantity * price;
+            orderViewDTO.setSubTotal(subtotal);
+
+            double tax = subtotal * 0.19;
+            orderViewDTO.setTax(tax);
+
+            double granTotal = subtotal + tax;
+            orderViewDTO.setGrandTotal(granTotal);
+
+            OrderEntity order = orderConverter.dtoToEntity(orderViewDTO);
+            order.setClient(client);
+            order.setProduct(product);
+            return orderConverter.entityToDto(orderRepository.save(order));
+
+        } catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        OrderViewDTO orderViewDTO = OrderViewDTO.builder()
-            .creationDateTime(LocalDateTime.now())
-            .clientDocument(clientEntity.get().getDocument())
-            .productUUID(UUID.randomUUID().toString())
-            .quantity(orderSaveRequestDTO.getQuantity())
-            .extraInformation(orderSaveRequestDTO.getExtraInformation())
-            .subTotal(orderSaveRequestDTO.getQuantity() * productEntity.get().getPrice())
-            .tax(TAX)
-            .grandTotal(productEntity.get().getPrice() + (productEntity.get().getPrice() * TAX))
-            .delivered(Boolean.FALSE)
-            .deliveredDate(null)
-            .build();
-
-            OrderEntity savingOrder = orderConverter.dtoToEntity(orderViewDTO);
-            savingOrder.setUuid(UUID.randomUUID().toString());
-            savingOrder.setClient(clientEntity.get());
-            savingOrder.setProduct(productEntity.get());
-
-            return orderConverter.entityToDto(orderRepository.save(savingOrder));
-        }
-
-    //@Override
-    //public String deliverOrder() {
-       // return null;
-    //}
-
+    }
 }
