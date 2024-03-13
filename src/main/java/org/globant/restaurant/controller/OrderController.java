@@ -1,5 +1,6 @@
 package org.globant.restaurant.controller;
 
+import org.globant.restaurant.commons.constans.endPoints.order.IOrderEndPoint;
 import org.globant.restaurant.model.OrderViewDTO;
 import org.globant.restaurant.model.request.OrderSaveRequest;
 import org.globant.restaurant.service.Order.IOrderService;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping(IOrderEndPoint.BASE_URL)
 public class OrderController {
 
     @Autowired
@@ -22,12 +23,12 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping("")
+    @PostMapping(IOrderEndPoint.CREATE_ORDER)
     public ResponseEntity<OrderViewDTO> createOrder(@RequestBody OrderSaveRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.save(request));
     }
 
-    @PatchMapping("/{uuid}/delivered/{timestamp}")
+    @PatchMapping(IOrderEndPoint.UPDATE_BY_UUID)
     public ResponseEntity<OrderViewDTO> updateByUUID(@PathVariable String uuid, @PathVariable LocalDateTime timestamp){
         return ResponseEntity.status(HttpStatus.OK).body(orderService.updateByUUID(uuid, timestamp));
     }
