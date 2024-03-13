@@ -10,7 +10,6 @@ import org.globant.restaurant.model.ProductDTO;
 import org.globant.restaurant.repository.Product.IProductRepository;
 import org.globant.restaurant.validators.ProductValidators;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -32,7 +31,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductDTO save(ProductDTO productDTO) {
-        Optional<ProductEntity> existingProduct = productRepository.findByFantasyName(productDTO.getFantasyName().toUpperCase());
+        Optional<ProductEntity> existingProduct = productRepository.findByFantasyNameAndAvailableIsTrue(productDTO.getFantasyName().toUpperCase());
 
         if (existingProduct.isPresent()) {
             throw new EntityAlreadyExistsException(IProductResponse.PRODUCT_EXIST);
@@ -48,7 +47,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductDTO findByUuid(String uuid) {
-        Optional<ProductEntity> productOptional = productRepository.findByUuid(uuid);
+        Optional<ProductEntity> productOptional = productRepository.findByUuidAndAvailableIsTrue(uuid);
 
         return productOptional.map(productConverter::convertProductEntityToProductDTO)
                 .orElseThrow(() -> new EntityNotFoundException(IProductResponse.PRODUCT_NOT_FOUND));
@@ -56,7 +55,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public void updateByUuid(String uuid, ProductDTO productDTO) { //TODO: check this method
-        Optional<ProductEntity> existingProductOptional = productRepository.findByUuid(uuid);
+        Optional<ProductEntity> existingProductOptional = productRepository.findByUuidAndAvailableIsTrue(uuid);
 
         ProductEntity existingProduct = existingProductOptional.orElseThrow(() -> new EntityNotFoundException(IProductResponse.PRODUCT_NOT_FOUND));
 
@@ -67,7 +66,7 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public void deleteByUuid(String uuid) {
-        Optional<ProductEntity> productOptional = productRepository.findByUuid(uuid);
+        Optional<ProductEntity> productOptional = productRepository.findByUuidAndAvailableIsTrue(uuid);
 
         productOptional.ifPresentOrElse(
                 product -> productRepository.deleteByUuid(uuid),
@@ -80,13 +79,13 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ProductDTO findByFantasyName(String fantasyName) {
         if (validator.productFantasyNameIsValid(fantasyName.toUpperCase())) {
-            Optional<ProductEntity> optionalProductEntity = productRepository.findByFantasyName(fantasyName);
+            Optional<ProductEntity> optionalProductEntity = productRepository.findByFantasyNameAndAvailableIsTrue(fantasyName);
 
             if (optionalProductEntity.isPresent()) {
                 return productConverter.
                         convertProductEntityToProductDTO(optionalProductEntity.get());
             }
-            throw new EntityNotFoundException(IProductResponse.PRODUCT_NOT_EXIST + fantasyName);
+            throw new EntityNotFoundException(IProductResponse.PRODUCT_NOT_EXIST + " " + fantasyName);
         }
         throw new ProductInvalidFantasyName(IProductResponse.PRODUCT_FORMAT_INVALID);
     }

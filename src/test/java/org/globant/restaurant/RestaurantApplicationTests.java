@@ -19,7 +19,7 @@ class RestaurantApplicationTests {
     @Test
     void contextLoads() {
         System.out.println("Query to find product where fantasy name like 'parameter' with JPA:");
-        System.out.println(productRepository.findAllByFantasyNameContaining("hel" ) );
+        System.out.println(productRepository.findAllByFantasyNameContainingAndAvailableIsTrue("hel" ) );
 
         System.out.println("Query to find product where fantasy name like 'parameter': ");
         System.out.println(productRepository.findAllByFantasyNameContainingJPQL("hel" ) );

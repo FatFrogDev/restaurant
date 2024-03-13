@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
@@ -17,14 +18,17 @@ public class OrderController {
     @Autowired
     private IOrderService orderService;
 
-    @PostMapping("")
-    public ResponseEntity<OrderViewDTO> createOrder(@RequestBody OrderSaveRequest request) {
-        return new ResponseEntity<>(orderService.save(request), HttpStatus.CREATED);
+    public OrderController(IOrderService orderService) {
+        this.orderService = orderService;
     }
 
-    @PutMapping("/{uuid}")
-    public ResponseEntity updateByUUID(@PathVariable UUID uuid, @RequestBody OrderViewDTO orderViewDTO){
-        orderService.updateByUUID(uuid, orderViewDTO);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    @PostMapping("")
+    public ResponseEntity<OrderViewDTO> createOrder(@RequestBody OrderSaveRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.save(request));
+    }
+
+    @PatchMapping("/{uuid}/delivered/{timestamp}")
+    public ResponseEntity<OrderViewDTO> updateByUUID(@PathVariable String uuid, @PathVariable LocalDateTime timestamp){
+        return ResponseEntity.status(HttpStatus.OK).body(orderService.updateByUUID(uuid, timestamp));
     }
 }
