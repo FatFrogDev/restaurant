@@ -15,7 +15,7 @@ public class OrderSaveRequest {
 
     private String clientDocument;
 
-    private UUID productUUID;
+    private String productUuid;
 
     private  int quantity;
 

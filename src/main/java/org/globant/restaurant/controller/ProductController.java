@@ -24,17 +24,17 @@ public class ProductController { //TODO: Add bonus track implementation (search 
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.save(productDTO));
     }
     @GetMapping(IProductEndPoint.GET_PRODUCT)
-    public ResponseEntity<ProductDTO> findProductByUuid(@PathVariable UUID uuid) {
+    public ResponseEntity<ProductDTO> findProductByUuid(@PathVariable String uuid) {
         return ResponseEntity.status(HttpStatus.OK).body(productService.findByUuid(uuid));
     }
     @PutMapping(IProductEndPoint.UPDATE_PRODUCT)
-    public ResponseEntity updateProduct(@PathVariable UUID uuid, @RequestBody ProductDTO productDTO) {
+    public ResponseEntity updateProduct(@PathVariable String uuid, @RequestBody ProductDTO productDTO) {
         productService.updateByUuid(uuid, productDTO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @DeleteMapping(IProductEndPoint.DELETE_PRODUCT)
-    public ResponseEntity deleteProduct(@PathVariable UUID uuid) {
+    public ResponseEntity deleteProduct(@PathVariable String uuid) {
         productService.deleteByUuid(uuid);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

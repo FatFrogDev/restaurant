@@ -13,7 +13,7 @@ public class ProductDTO {
     private String fantasyName;
     private String category;
     private String description;
-    private String price;
+    private double price;
     private Boolean available;
 
     @PostConstruct

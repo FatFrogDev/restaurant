@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,11 +14,15 @@ import java.util.UUID;
 
 @Repository
 public interface IProductRepository extends JpaRepository<ProductEntity, Long> {
-    Optional<ProductEntity> findByUuid(UUID uuid);
+    Optional<ProductEntity> findByUuid(String uuid);
 
     Optional<ProductEntity> findByFantasyName(String fantasyName);
 
-    void deleteByUuid(UUID uuid);
+    @Transactional
+    void deleteByUuid(String uuid);
+
+    boolean existsByUuid(String uuid);
+
     // Custom query to find product by fantasy name by using JPA
     List<ProductEntity> findAllByFantasyNameContaining(String productName);
 

@@ -22,7 +22,7 @@ public class ProductEntity {
     private Long id;
 
     @Column(nullable = false)
-    private UUID uuid;
+    private String uuid;
 
     @NotNull
     @Column(nullable = false, unique = true)

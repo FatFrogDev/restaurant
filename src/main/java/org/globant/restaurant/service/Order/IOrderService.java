@@ -7,11 +7,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.UUID;
 
 public interface IOrderService {
-    String updateOrderByUUID(UUID id, OrderViewDTO orderViewDTO);
+    String updateByUUID(UUID id, OrderViewDTO orderViewDTO);
 
-      OrderViewDTO createOrder(OrderSaveRequest request);
+    OrderViewDTO save(OrderSaveRequest request);
 
-    String deliverOrder();
-
-    ResponseEntity<?> save(OrderSaveRequest orderSaveRequest);
+//     String deliverOrder();
 }

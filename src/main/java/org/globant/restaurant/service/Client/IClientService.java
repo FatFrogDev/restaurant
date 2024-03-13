@@ -18,4 +18,6 @@ public interface IClientService {
     ClientDto findClientByDocument(String document);
 
     List<ClientDto> findAllByCustomFieldAndOrder(String customField, String customOrder);
+
+    public boolean existsByDocument(String document);
 }

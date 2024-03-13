@@ -22,7 +22,7 @@ public class ProductValidators {
             return true;
         }
 
-        if (productDTO.getPrice() != null && !productDTO.getPrice().equals(String.valueOf(entity.getPrice()))) {
+        if (productDTO.getPrice() >=0 && !(productDTO.getPrice()==entity.getPrice())) {
             return true;
         }
 

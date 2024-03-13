@@ -7,11 +7,13 @@ import java.util.UUID;
 public interface IProductService {
      ProductDTO save(ProductDTO productDTO);
 
-     ProductDTO findByUuid(UUID uuid);
+    ProductDTO findByUuid(String uuid);
 
-     void updateByUuid(UUID uuid, ProductDTO productDTO);
+    void updateByUuid(String uuid, ProductDTO productDTO);
 
-     void deleteByUuid(UUID uuid);
+     void deleteByUuid(String uuid);
 
     ProductDTO findByFantasyName(String fantasyName);
+
+    boolean existsByUuid(String uuid);
 }

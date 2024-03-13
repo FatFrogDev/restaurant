@@ -2,10 +2,7 @@ package org.globant.restaurant.service.Client;
 
 import org.globant.restaurant.commons.constans.response.client.IClientResponse;
 import org.globant.restaurant.entity.ClientEntity;
-import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
-import org.globant.restaurant.exceptions.EntityHasNoDifferentDataException;
-import org.globant.restaurant.exceptions.EntityNotFoundException;
-import org.globant.restaurant.exceptions.InvalidQueryArgsException;
+import org.globant.restaurant.exceptions.*;
 import org.globant.restaurant.mapper.ClientConverter;
 import org.globant.restaurant.model.ClientDto;
 import org.globant.restaurant.repository.Client.IClientRepository;
@@ -92,5 +89,12 @@ public class ClientServiceImpl implements IClientService {
                     .toList();
         }
         throw new InvalidQueryArgsException(IClientResponse.CLIENT_INVALID_ARGUMENTS);
+    }
+
+    @Override
+    public boolean existsByDocument(String document) {
+        if(validator.clientDocumentIsValid(document)){
+            return clientRepository.existsByDocument(document);
+        } throw new ClientInvalidDocumentFormatException(IClientResponse.CLIENT_INVALID_FORMAT_DOCUMENT);
     }
 }

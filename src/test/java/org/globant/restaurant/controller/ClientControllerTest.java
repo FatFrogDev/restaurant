@@ -35,9 +35,5 @@ class ClientControllerTest {
     @Test
     void testShouldThrowClientHasDifferentDocumentException(){
         //Given
-        ClientEntity clientEntity = new ClientEntity();
-        Mockito.when(clientService.updateByDocument(clientDto.getDocument(), clientDto))
-                .thenThrow(ClientHasDifferentDocumentException.class);
-
     }
 }

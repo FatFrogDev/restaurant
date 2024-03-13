@@ -2,10 +2,7 @@ package org.globant.restaurant.model;
 
 // import java.util.UUID;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.entity.ProductEntity;
 
@@ -16,12 +13,13 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class OrderViewDTO {
     private UUID uuid;
     private LocalDateTime creationDateTime;
-    private ClientEntity clientDocument;
-    private ProductEntity productUUID;
+    private String clientDocument;
+    private String productUUID;
     private int quantity;
     private String extraInformation;
     private Double subTotal;

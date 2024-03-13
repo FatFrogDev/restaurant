@@ -26,4 +26,6 @@ public interface IClientRepository extends JpaRepository<ClientEntity, UUID> {
     Optional<LinkedList<ClientEntity>> findByCustomFieldAndOrder
             (@Param("custom_field") String custom_field,
              @Param("custom_order") String custom_order);
+
+    boolean existsByDocument(String document);
 }

@@ -3,9 +3,7 @@ package org.globant.restaurant.validators;
 import jakarta.validation.Valid;
 import org.globant.restaurant.commons.constans.response.client.IClientResponse;
 import org.globant.restaurant.entity.ClientEntity;
-import org.globant.restaurant.exceptions.ClientHasDifferentDocumentException;
-import org.globant.restaurant.exceptions.ClientInvalidDocumentFormatException;
-import org.globant.restaurant.exceptions.EntityHasNoDifferentDataException;
+import org.globant.restaurant.exceptions.*;
 import org.globant.restaurant.model.ClientDto;
 import org.springframework.stereotype.Component;
 

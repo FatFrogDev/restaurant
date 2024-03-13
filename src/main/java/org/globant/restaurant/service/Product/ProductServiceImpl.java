@@ -1,7 +1,6 @@
 package org.globant.restaurant.service.Product;
 
 import org.globant.restaurant.commons.constans.response.product.IProductResponse;
-import org.globant.restaurant.controller.ProductController;
 import org.globant.restaurant.entity.ProductEntity;
 import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
 import org.globant.restaurant.exceptions.EntityNotFoundException;
@@ -40,17 +39,15 @@ public class ProductServiceImpl implements IProductService {
         }
 
         ProductEntity productEntity = productConverter.convertProductDtoToProductEntity(productDTO);
-        UUID uuid = UUID.randomUUID();
-        productEntity.setUuid(uuid);
+        productEntity.setUuid(UUID.randomUUID().toString());
         productEntity.setFantasyName(productEntity.getFantasyName().toUpperCase());
 
-        ProductEntity savedProduct = productRepository.save(productEntity);
 
-        return productConverter.convertProductEntityToProductDTO(savedProduct);
+        return productConverter.convertProductEntityToProductDTO(productRepository.save(productEntity));
     }
 
     @Override
-    public ProductDTO findByUuid(UUID uuid) {
+    public ProductDTO findByUuid(String uuid) {
         Optional<ProductEntity> productOptional = productRepository.findByUuid(uuid);
 
         return productOptional.map(productConverter::convertProductEntityToProductDTO)
@@ -58,39 +55,18 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public void updateByUuid(UUID uuid, ProductDTO productDTO) {
+    public void updateByUuid(String uuid, ProductDTO productDTO) { //TODO: check this method
         Optional<ProductEntity> existingProductOptional = productRepository.findByUuid(uuid);
 
         ProductEntity existingProduct = existingProductOptional.orElseThrow(() -> new EntityNotFoundException(IProductResponse.PRODUCT_NOT_FOUND));
 
         if (validator.productIsUpdatable(productDTO, existingProduct)) {
-            if (productDTO.getFantasyName() != null) {
-                existingProduct.setFantasyName(productDTO.getFantasyName().toUpperCase());
-            }
-
-            if (productDTO.getCategory() != null) {
-                existingProduct.setCategory(ProductEntity.Category.valueOf(productDTO.getCategory()));
-            }
-
-            if (productDTO.getDescription() != null) {
-                existingProduct.setDescription(productDTO.getDescription());
-            }
-
-            if (productDTO.getPrice() != null) {
-                existingProduct.setPrice(Double.parseDouble(productDTO.getPrice()));
-            }
-
-            if (productDTO.getAvailable() != null) {
-                existingProduct.setAvailable(productDTO.getAvailable());
-            }
-
             productRepository.save(existingProduct);
         }
     }
 
     @Override
-    @Transactional
-    public void deleteByUuid(UUID uuid) {
+    public void deleteByUuid(String uuid) {
         Optional<ProductEntity> productOptional = productRepository.findByUuid(uuid);
 
         productOptional.ifPresentOrElse(
@@ -113,5 +89,11 @@ public class ProductServiceImpl implements IProductService {
             throw new EntityNotFoundException(IProductResponse.PRODUCT_NOT_EXIST + fantasyName);
         }
         throw new ProductInvalidFantasyName(IProductResponse.PRODUCT_FORMAT_INVALID);
+    }
+
+    @Override
+    public boolean existsByUuid(String uuid) {
+         // TODO: Add uuid validator format before returning a result.
+        return productRepository.existsByUuid(uuid);
     }
 }

@@ -17,14 +17,14 @@ public class OrderController {
     @Autowired
     private IOrderService orderService;
 
-    @PostMapping
+    @PostMapping("")
     public ResponseEntity<OrderViewDTO> createOrder(@RequestBody OrderSaveRequest request) {
-        return new ResponseEntity<>(orderService.createOrder(request), HttpStatus.CREATED);
+        return new ResponseEntity<>(orderService.save(request), HttpStatus.CREATED);
     }
 
     @PutMapping("/{uuid}")
     public ResponseEntity updateByUUID(@PathVariable UUID uuid, @RequestBody OrderViewDTO orderViewDTO){
-        orderService.updateOrderByUUID(uuid, orderViewDTO);
+        orderService.updateByUUID(uuid, orderViewDTO);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
