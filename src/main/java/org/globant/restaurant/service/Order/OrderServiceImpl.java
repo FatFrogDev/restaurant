@@ -1,6 +1,7 @@
 package org.globant.restaurant.service.Order;
 
 import org.globant.restaurant.commons.constans.response.client.IClientResponse;
+import org.globant.restaurant.commons.constans.response.order.IOrderResponse;
 import org.globant.restaurant.commons.constans.response.product.IProductResponse;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.entity.OrderEntity;
@@ -49,7 +50,7 @@ public class OrderServiceImpl implements IOrderService{
             optionalOrder.get().setDelivered(Boolean.TRUE);
             orderRepository.save(optionalOrder.get());
             return orderConverter.entityToDto(optionalOrder.get());
-        } throw new EntityNotFoundException("Order not found");
+        } throw new EntityNotFoundException(IOrderResponse.ORDER_NOT_FOUND);
     }
 
     @Override
@@ -60,9 +61,9 @@ public class OrderServiceImpl implements IOrderService{
         Optional<ClientEntity> clientEntity = clientRepository.findByDocument(orderSaveRequestDTO.getClientDocument());
 
         if (productEntity.isEmpty()) {
-            throw new EntityNotFoundException(IProductResponse.PRODUCT_NOT_FOUND);
+            throw new EntityNotFoundException(IOrderResponse.ORDER_NOT_FOUND);
         }if(clientEntity.isEmpty()){
-            throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
+            throw new EntityNotFoundException(IOrderResponse.ORDER_NOT_EXIST);
         }
 
         OrderViewDTO orderViewDTO = OrderViewDTO.builder()
