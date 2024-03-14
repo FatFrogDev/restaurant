@@ -1,7 +1,5 @@
 package org.globant.restaurant.service.Order;
 
-import org.globant.restaurant.commons.constans.response.client.IClientResponse;
-import org.globant.restaurant.commons.constans.response.product.IProductResponse;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.entity.OrderEntity;
 import org.globant.restaurant.entity.ProductEntity;
@@ -20,7 +18,6 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.UUID;
-
 
 @Service
 public class OrderServiceImpl implements IOrderService {
@@ -89,7 +86,7 @@ public class OrderServiceImpl implements IOrderService {
             order.setProduct(product);
             return orderConverter.entityToDto(orderRepository.save(order));
 
-        } catch (Exception e){
+        } catch (EntityNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
