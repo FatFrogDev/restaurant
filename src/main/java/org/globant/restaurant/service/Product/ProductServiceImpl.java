@@ -3,6 +3,7 @@ package org.globant.restaurant.service.Product;
 import org.globant.restaurant.commons.constans.response.product.IProductResponse;
 import org.globant.restaurant.entity.ProductEntity;
 import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
+import org.globant.restaurant.exceptions.EntityHasNoDifferentDataException;
 import org.globant.restaurant.exceptions.EntityNotFoundException;
 import org.globant.restaurant.exceptions.ProductInvalidFantasyName;
 import org.globant.restaurant.mapper.ProductConverter;
@@ -54,13 +55,21 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public void updateByUuid(String uuid, ProductDTO productDTO) { //TODO: check this method
+    public void updateByUuid(String uuid, ProductDTO productDTO) {
         Optional<ProductEntity> existingProductOptional = productRepository.findByUuidAndAvailableIsTrue(uuid);
 
         ProductEntity existingProduct = existingProductOptional.orElseThrow(() -> new EntityNotFoundException(IProductResponse.PRODUCT_NOT_FOUND));
 
         if (validator.productIsUpdatable(productDTO, existingProduct)) {
+            existingProduct.setFantasyName(productDTO.getFantasyName());
+            existingProduct.setCategory(ProductEntity.Category.valueOf(productDTO.getCategory()));
+            existingProduct.setDescription(productDTO.getDescription());
+            existingProduct.setPrice(productDTO.getPrice());
+            existingProduct.setAvailable(productDTO.getAvailable());
+
             productRepository.save(existingProduct);
+        } else {
+            throw new EntityHasNoDifferentDataException(IProductResponse.PRODUCT_NOT_CHANGES);
         }
     }
 
