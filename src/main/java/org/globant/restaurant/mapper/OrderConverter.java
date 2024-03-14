@@ -27,6 +27,7 @@ public class OrderConverter {
 
     public OrderEntity dtoToEntity(OrderViewDTO orderViewDTO) {
         return OrderEntity.builder()
+                .uuid(orderViewDTO.getUuid())
                 .creationDateTime(orderViewDTO.getCreationDateTime())
                 .quantity(orderViewDTO.getQuantity())
                 .extraInformation(orderViewDTO.getExtraInformation())

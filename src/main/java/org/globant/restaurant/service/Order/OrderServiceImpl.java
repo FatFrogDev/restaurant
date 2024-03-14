@@ -3,6 +3,7 @@ package org.globant.restaurant.service.Order;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.entity.OrderEntity;
 import org.globant.restaurant.entity.ProductEntity;
+import org.globant.restaurant.exceptions.EntityHasNoDifferentDataException;
 import org.globant.restaurant.exceptions.EntityNotFoundException;
 import org.globant.restaurant.mapper.OrderConverter;
 import org.globant.restaurant.model.request.OrderRequest;
@@ -10,6 +11,7 @@ import org.globant.restaurant.model.OrderViewDTO;
 import org.globant.restaurant.repository.Client.IClientRepository;
 import org.globant.restaurant.repository.Order.IOrderRepository;
 import org.globant.restaurant.repository.Product.IProductRepository;
+import org.globant.restaurant.validators.OrderValidators;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,9 @@ public class OrderServiceImpl implements IOrderService {
 
     @Autowired
     private OrderConverter orderConverter;
+
+    @Autowired
+    private OrderValidators validators;
 
     private final double TAX = 0.19D;
 
@@ -57,7 +62,12 @@ public class OrderServiceImpl implements IOrderService {
         try {
             OrderViewDTO orderViewDTO = new OrderViewDTO();
 
-            Optional<ProductEntity> productResult = productRepository.findByUuid(request.getProductUuid());
+            if (!validators.isSavableOrder(request))  {
+                throw new EntityNotFoundException("Validate data");
+            }
+
+            Optional<ProductEntity> productResult = productRepository.findByUuidAndAvailableIsTrue(
+                    request.getProductUuid().toString());
             Optional<ClientEntity> clientResult = clientRepository.findByDocument(request.getClientDocument());
 
             ClientEntity client = clientResult.orElseThrow(() -> new EntityNotFoundException("Client is empty"));
