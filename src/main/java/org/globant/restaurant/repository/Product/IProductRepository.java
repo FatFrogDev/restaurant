@@ -13,11 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Repository
 public interface IProductRepository extends JpaRepository<ProductEntity, Long> {
-    Optional<ProductEntity> findByUuid(UUID uuid);
+    Optional<ProductEntity> findByUuidAndAvailableIsTrue(String uuid);
 
     Optional<ProductEntity> findByFantasyNameAndAvailableIsTrue(String fantasyName);
 
