@@ -8,7 +8,6 @@ import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.entity.OrderEntity;
 import org.globant.restaurant.entity.ProductEntity;
 import org.globant.restaurant.exceptions.EntityNotFoundException;
-import org.globant.restaurant.exceptions.EntityValidationException;
 import org.globant.restaurant.mapper.OrderConverter;
 import org.globant.restaurant.model.request.OrderRequest;
 import org.globant.restaurant.model.OrderViewDTO;
@@ -23,7 +22,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.UUID;
 
-import static org.globant.restaurant.mapper.OrderConverter.convertTimestamp;
+
 
 @Service
 @AllArgsConstructor
