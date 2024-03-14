@@ -3,10 +3,7 @@ package org.globant.restaurant.service.Product;
 import lombok.AllArgsConstructor;
 import org.globant.restaurant.commons.constans.response.product.IProductResponse;
 import org.globant.restaurant.entity.ProductEntity;
-import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
-import org.globant.restaurant.exceptions.EntityHasNoDifferentDataException;
-import org.globant.restaurant.exceptions.EntityNotFoundException;
-import org.globant.restaurant.exceptions.ProductInvalidFantasyName;
+import org.globant.restaurant.exceptions.*;
 import org.globant.restaurant.mapper.ProductConverter;
 import org.globant.restaurant.model.ProductDTO;
 import org.globant.restaurant.repository.Product.IProductRepository;
@@ -37,7 +34,6 @@ public class ProductServiceImpl implements IProductService {
         ProductEntity productEntity = productConverter.convertProductDtoToProductEntity(productDTO);
         productEntity.setUuid(UUID.randomUUID().toString());
         productEntity.setFantasyName(productEntity.getFantasyName().toUpperCase());
-
 
         return productConverter.convertProductEntityToProductDTO(productRepository.save(productEntity));
     }
@@ -99,5 +95,10 @@ public class ProductServiceImpl implements IProductService {
     public boolean existsByUuid(String uuid) {
          // TODO: Add uuid validator format before returning a result.
         return productRepository.existsByUuid(uuid);
+    }
+
+    private boolean productIsvAvailable(String productFantasyName) {
+        Optional<ProductEntity> productEntity = productRepository.findByFantasyNameAndAvailableIsTrue(productFantasyName.toUpperCase());
+        return productEntity.isPresent();
     }
 }

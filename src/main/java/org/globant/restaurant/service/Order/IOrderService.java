@@ -12,5 +12,7 @@ public interface IOrderService {
 
     OrderViewDTO save(OrderRequest request);
 
+    boolean orderIsAlreadyDelivered(String orderUuid);
+
 //     String deliverOrder();
 }

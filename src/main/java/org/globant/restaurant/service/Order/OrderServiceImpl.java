@@ -8,6 +8,8 @@ import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.entity.OrderEntity;
 import org.globant.restaurant.entity.ProductEntity;
 import org.globant.restaurant.exceptions.EntityNotFoundException;
+import org.globant.restaurant.exceptions.EntityValidationException;
+import org.globant.restaurant.exceptions.OrderIsAlreadyDelivered;
 import org.globant.restaurant.mapper.OrderConverter;
 import org.globant.restaurant.model.request.OrderRequest;
 import org.globant.restaurant.model.OrderViewDTO;
@@ -15,7 +17,6 @@ import org.globant.restaurant.repository.Client.IClientRepository;
 import org.globant.restaurant.repository.Order.IOrderRepository;
 import org.globant.restaurant.repository.Product.IProductRepository;
 import org.globant.restaurant.validators.OrderValidators;
-import org.modelmapper.ValidationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -41,17 +42,20 @@ public class OrderServiceImpl implements IOrderService {
     private final double TAX = 0.19D;
 
     @Override
-    public OrderViewDTO updateByUUID(String orderUuid, LocalDateTime deliveredTimestamp) {
-
+    public OrderViewDTO updateByUUID(String orderUuid, LocalDateTime deliveredTimestamp) { // TODO: validate timestamp format
 
         Optional<OrderEntity> optionalOrder = orderRepository.findByUuid(orderUuid);
 
-        OrderEntity order = optionalOrder.orElseThrow(() -> new EntityNotFoundException(IOrderResponse.ORDER_NOT_FOUND));
-
-        order.setDeliveryDate(deliveredTimestamp);
-        order.setDelivered(Boolean.TRUE);
-        orderRepository.save(order);
-        return orderConverter.entityToDto(order);
+        if (optionalOrder.isPresent()) {
+            if (!orderIsAlreadyDelivered(orderUuid)) {
+                optionalOrder.get().setDeliveryDate(deliveredTimestamp);
+                optionalOrder.get().setDelivered(Boolean.TRUE);
+                orderRepository.save(optionalOrder.get());
+                return orderConverter.entityToDto(optionalOrder.get());
+            }
+            throw new OrderIsAlreadyDelivered(IOrderResponse.ORDER_ALREADY_DELIVERED);
+        }
+        throw new EntityNotFoundException(IOrderResponse.ORDER_NOT_FOUND);
     }
 
     @Override
@@ -75,7 +79,9 @@ public class OrderServiceImpl implements IOrderService {
                 .extraInformation(orderRequest.getExtraInformation())
                 .subTotal(orderRequest.getQuantity() * productEntity.get().getPrice())
                 .tax(TAX)
-                .grandTotal(productEntity.get().getPrice() + (productEntity.get().getPrice() * TAX))
+                .grandTotal
+                        (orderRequest.getQuantity() * productEntity.get().getPrice()
+                                + (productEntity.get().getPrice() * TAX))
                 .delivered(Boolean.FALSE)
                 .deliveredDate(null)
                 .build();
@@ -86,5 +92,11 @@ public class OrderServiceImpl implements IOrderService {
         savingOrder.setProduct(productEntity.get());
 
         return orderConverter.entityToDto(orderRepository.save(savingOrder));
+        }
+
+        @Override
+        public boolean orderIsAlreadyDelivered(String orderUuid){
+            Optional<OrderEntity> optionalOrder = orderRepository.findByUuidAndDeliveredIsTrue(orderUuid);
+            return optionalOrder.isPresent();
         }
 }

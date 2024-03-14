@@ -83,14 +83,14 @@ public class ClientValidators {
      * @param entity the ClientEntity object to be compared.
      * @return Weather the Client has changes to be updated or not.
      */
-    public final boolean clientHasChanges(@Valid ClientDto clientDto, ClientEntity entity){
+    public final boolean clientHasChanges(ClientDto clientDto, ClientEntity entity){
 
         if(clientDto.getFullName() != null && !clientDto.getFullName().equals(entity.getFullName())){
             return true;
         }
 
         // Return weather the email is not null and is not different from the entity email or not.
-        if(clientDto.getEmail() != null && clientDto.getEmail().equals(entity.getEmail())){
+        if(clientDto.getEmail() != null && !clientDto.getEmail().equals(entity.getEmail())){
             return true;
         }
 
@@ -115,13 +115,14 @@ public class ClientValidators {
      * @throws ClientHasDifferentDocumentException when ClientDto object has a different document that the entity one.
      * @throws ClientInvalidDocumentFormatException when client document format is invalid.
      */
-    public boolean clientIsUpdatable(@Valid ClientDto clientDto, ClientEntity entity){
+    public boolean clientIsUpdatable(ClientDto clientDto, ClientEntity entity){
         if (clientDocumentIsValid(clientDto.getDocument())) {
             if (clientDto.getDocument().equals(entity.getDocument())) {
-                return clientHasChanges(clientDto, entity);
-            } throw new ClientHasDifferentDocumentException(IClientResponse.CLIENT_NOT_CHANGES_DOCUMENT);
-        }
-        throw new ClientInvalidDocumentFormatException(IClientResponse.CLIENT_INVALID_FORMAT_DOCUMENT);
+                 if (clientHasChanges(clientDto, entity)){
+                     return true;
+                 } else throw new EntityHasNoDifferentDataException(IClientResponse.CLIENT_NOT_CHANGES);
+            } else throw new ClientHasDifferentDocumentException(IClientResponse.CLIENT_HAS_CHANGES_IN_DOCUMENT);
+        }else throw new ClientInvalidDocumentFormatException(IClientResponse.CLIENT_INVALID_FORMAT_DOCUMENT);
     };
 
     /**

@@ -43,12 +43,13 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(clientDto.getDocument());
 
         if (optionalClient.isPresent()) {
-            if(validator.clientIsUpdatable(clientDto, optionalClient.get())){
+            if( validator.clientIsUpdatable(clientDto, optionalClient.get()) ){
+                System.out.println("actualizando");
                 ClientEntity clientEntity = converter.convertClientDtoToClientEntity(clientDto);
                 clientEntity.setUuid(optionalClient.get().getUuid());
                 clientRepository.save(clientEntity);
-            } throw new EntityHasNoDifferentDataException(IClientResponse.CLIENT_DIFFERENT_DATA);
-        } throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
+            } else throw new EntityHasNoDifferentDataException(IClientResponse.CLIENT_DIFFERENT_DATA);
+        } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
     @Override
@@ -56,7 +57,7 @@ public class ClientServiceImpl implements IClientService {
         Optional<ClientEntity> optionalClient = clientRepository.findByDocument(document);
         if (optionalClient.isPresent()) {
             clientRepository.deleteByDocument(document);
-        } throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
+        } else throw new EntityNotFoundException(IClientResponse.CLIENT_NOT_EXIST);
     }
 
     @Override

@@ -155,7 +155,7 @@ public class ExceptionsHandlerController {
 
     /**
      * Exceptions Handler for OrderIsAlreadyDelivered exception.
-     * This exception is thrown when given order is already setted to delivered.<br>
+     * This exception is thrown when given order is already set to delivered.<br>
      * The stats code returned will be CONFLICT (409).
      * @param e Exception thrown
      * @return ResponseEntity object with a ErrorDTO which contains the error message.
@@ -167,7 +167,7 @@ public class ExceptionsHandlerController {
     }
 
     /**
-     * Exceptions Handler for ProductIsUnavaliable exception.
+     * Exceptions Handler for ProductIsUnavailable exception.
      * This exception is thrown when a product is found but is unavaliable to set it in an order or when trying to create a product that has the same name that the unavaliable product. <br>
      * The stats code returned will be CONFLICT (409).
      * @param e Exception thrown
