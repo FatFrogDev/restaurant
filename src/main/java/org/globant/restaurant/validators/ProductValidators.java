@@ -30,7 +30,7 @@ public class ProductValidators {
             return true;
         }
 
-        throw new EntityHasNoDifferentDataException(IProductResponse.PRODUCT_NOT_CHANGES);
+        throw new EntityHasNoDifferentDataException(IProductResponse.PRODUCT_HAS_NOT_CHANGES);
     }
 
     public boolean productIsUpdatable(@Valid ProductDTO productDTO, ProductEntity entity) {

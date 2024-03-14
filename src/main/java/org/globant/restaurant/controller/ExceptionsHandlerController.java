@@ -153,4 +153,29 @@ public class ExceptionsHandlerController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
+    /**
+     * Exceptions Handler for OrderIsAlreadyDelivered exception.
+     * This exception is thrown when given order is already setted to delivered.<br>
+     * The stats code returned will be CONFLICT (409).
+     * @param e Exception thrown
+     * @return ResponseEntity object with a ErrorDTO which contains the error message.
+     */
+    @ExceptionHandler({OrderIsAlreadyDelivered.class})
+    public ResponseEntity<ErrorDTO> handleEntityHasNoDifferentDataException(OrderIsAlreadyDelivered e) {
+        ErrorDTO error = new ErrorDTO(HttpStatus.CONFLICT, date,"validation error: " + e.getMessage(), OrderIsAlreadyDelivered.class.getSimpleName());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    /**
+     * Exceptions Handler for ProductIsUnavaliable exception.
+     * This exception is thrown when a product is found but is unavaliable to set it in an order or when trying to create a product that has the same name that the unavaliable product. <br>
+     * The stats code returned will be CONFLICT (409).
+     * @param e Exception thrown
+     * @return ResponseEntity object with a ErrorDTO which contains the error message.
+     */
+    @ExceptionHandler({ProductIsUnavaliable.class})
+    public ResponseEntity<ErrorDTO> handleEntityHasNoDifferentDataException(ProductIsUnavaliable e) {
+        ErrorDTO error = new ErrorDTO(HttpStatus.CONFLICT, date,"validation error: " + e.getMessage(), ProductIsUnavaliable.class.getSimpleName());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
 }

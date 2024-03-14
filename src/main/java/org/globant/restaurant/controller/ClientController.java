@@ -1,6 +1,7 @@
 package org.globant.restaurant.controller;
 
 
+import lombok.AllArgsConstructor;
 import org.globant.restaurant.commons.constans.endPoints.client.IClientEndPoint;
 import org.globant.restaurant.model.ClientDto;
 import org.globant.restaurant.service.Client.ClientServiceImpl;
@@ -14,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping(IClientEndPoint.BASE_URL_CLIENTS)
 public class ClientController {
+
     private final IClientService clientService;
-    public ClientController(ClientServiceImpl clientService) {
-        this.clientService = clientService;
-    }
+
     @GetMapping(IClientEndPoint.FIND_CLIENT_DOCUMENT)
     public ResponseEntity<ClientDto> findClientByDocument(@PathVariable String document){
         return ResponseEntity.status(HttpStatus.OK).body(clientService.findClientByDocument(document));

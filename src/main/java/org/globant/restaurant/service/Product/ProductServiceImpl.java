@@ -1,5 +1,6 @@
 package org.globant.restaurant.service.Product;
 
+import lombok.AllArgsConstructor;
 import org.globant.restaurant.commons.constans.response.product.IProductResponse;
 import org.globant.restaurant.entity.ProductEntity;
 import org.globant.restaurant.exceptions.EntityAlreadyExistsException;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class ProductServiceImpl implements IProductService {
 
     private final IProductRepository productRepository;
@@ -22,12 +24,6 @@ public class ProductServiceImpl implements IProductService {
     private final ProductConverter productConverter;
 
     private final ProductValidators validator;
-
-    public ProductServiceImpl(IProductRepository productRepository, ProductConverter productConverter, ProductValidators validator) {
-        this.productRepository = productRepository;
-        this.productConverter = productConverter;
-        this.validator = validator;
-    }
 
     @Override
     public ProductDTO save(ProductDTO productDTO) {
@@ -85,9 +81,9 @@ public class ProductServiceImpl implements IProductService {
                 return productConverter.
                         convertProductEntityToProductDTO(optionalProductEntity.get());
             }
-            throw new EntityNotFoundException(IProductResponse.PRODUCT_NOT_EXIST + " " + fantasyName);
+            throw new EntityNotFoundException(IProductResponse.PRODUCT_NOT_EXISTS + " " + fantasyName);
         }
-        throw new ProductInvalidFantasyName(IProductResponse.PRODUCT_FORMAT_INVALID);
+        throw new ProductInvalidFantasyName(IProductResponse.FANTASY_NAME_FORMAT_IS_INVALID);
     }
 
     @Override

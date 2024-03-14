@@ -5,6 +5,10 @@ import org.globant.restaurant.entity.OrderEntity;
 import org.globant.restaurant.model.OrderViewDTO;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 @Component
 @Log4j2
 public class OrderConverter {
@@ -37,5 +41,13 @@ public class OrderConverter {
                 .delivered(orderViewDTO.isDelivered())
                 .deliveryDate(orderViewDTO.getDeliveredDate())
                 .build();
+    }
+
+    public LocalDateTime convertTimestamp(String timestampString) throws DateTimeParseException {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+        return LocalDateTime.parse(timestampString, formatter);
+
     }
 }

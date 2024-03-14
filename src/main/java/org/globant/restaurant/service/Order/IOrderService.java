@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public interface IOrderService {
-    OrderViewDTO updateByUUID(UUID orderUuid, LocalDateTime deliveredTimestamp) throws Exception;
+    OrderViewDTO updateByUUID(String orderUuid, LocalDateTime deliveredTimestamp);
 
     OrderViewDTO save(OrderRequest request);
 

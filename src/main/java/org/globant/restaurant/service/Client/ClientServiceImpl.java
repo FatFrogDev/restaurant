@@ -1,5 +1,6 @@
 package org.globant.restaurant.service.Client;
 
+import lombok.AllArgsConstructor;
 import org.globant.restaurant.commons.constans.response.client.IClientResponse;
 import org.globant.restaurant.entity.ClientEntity;
 import org.globant.restaurant.exceptions.*;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class ClientServiceImpl implements IClientService {
 
     private final IClientRepository clientRepository;
@@ -21,12 +23,6 @@ public class ClientServiceImpl implements IClientService {
     private final ClientConverter converter;
 
     private final ClientValidators validator;
-
-    public ClientServiceImpl(IClientRepository clientRepository, ClientConverter converter, ClientValidators validator) {
-        this.clientRepository = clientRepository;
-        this.converter = converter;
-        this.validator = validator;
-    }
 
     @Override
     public ClientDto save(ClientDto clientDto) {
@@ -93,8 +89,7 @@ public class ClientServiceImpl implements IClientService {
 
     @Override
     public boolean existsByDocument(String document) {
-        if(validator.clientDocumentIsValid(document)){
-            return clientRepository.existsByDocument(document);
-        } throw new ClientInvalidDocumentFormatException(IClientResponse.CLIENT_INVALID_FORMAT_DOCUMENT);
+        validator.clientDocumentIsValid(document);
+        return clientRepository.existsByDocument(document);
     }
 }
